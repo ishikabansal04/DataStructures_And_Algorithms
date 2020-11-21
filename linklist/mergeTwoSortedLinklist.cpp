@@ -178,71 +178,42 @@ using namespace std;
     }
   };
 
-    LinkedList MergeTwoSortedLinklist(LinkedList l1, LinkedList l2){
-        Node* ptr1=l1.head;
-        Node* ptr2=l2.head;
-        LinkedList merged;
-        if(l1.size==0) {
-          return l2;
+    LinkedList MergeTwoSortedLinklist(LinkedList l1, LinkedList l2)
+{
+    LinkedList *output_ll = new LinkedList();
+    Node *head1 = l1.head;
+    Node *head2 = l2.head;
+    while (head1 != NULL && head2 != NULL)
+    {
+        if (head1->data <= head2->data)
+        {
+            output_ll->addLast(head1->data);
+            head1 = head1->next;
         }
-        if(l2.size==0){
-          return l1;
+        else
+        {
+            output_ll->addLast(head2->data);
+            head2 = head2->next;
         }
-
-
-        Node* l=new Node;
-        merged.head = l;
-          if(ptr1->data < ptr2->data){
-            l->data = ptr1->data;
-            ptr1=ptr1->next;
-        }
-        else{
-            l->data =ptr2->data;
-            ptr2=ptr2->next;
-        }
-        
-        while(ptr1!=NULL && ptr2!=NULL){
-            if(ptr1->data < ptr2->data){
-                Node* temp=new Node;
-                temp->data=ptr1->data;
-                temp->next=NULL;
-                l->next=temp;
-                ptr1=ptr1->next;
-                l=l->next;
-            }
-            else{
-               Node* temp=new Node;
-                temp->data=ptr2->data;
-                temp->next=NULL;
-                l->next=temp;
-                ptr2=ptr2->next;
-                l=l->next;
-            }
-        }
-        while(ptr1!=NULL){
-            Node* temp=new Node;
-            temp->data=ptr1->data;
-            temp->next=NULL;
-            l->next=temp;
-            l=l->next;
-            ptr1=ptr1->next;
-            if(ptr1==NULL){
-                merged.tail=l;
-            }
-        }
-        while(ptr2!=NULL){
-            Node* temp=new Node;
-            temp->data=ptr2->data;
-            temp->next=NULL;
-            l->next=temp;
-            l=l->next;
-            ptr2=ptr2->next;
-            if(ptr2==NULL){
-                merged.tail=l;
-            }
-        }
-        return merged;
     }
+    if (head1 == NULL)
+    {
+        while (head2 != NULL)
+        {
+            output_ll->addLast(head2->data);
+            head2 = head2-> next;
+        }
+    }
+    else
+    {
+        while (head1 != NULL)
+        {
+            output_ll->addLast(head1->data);
+            head1 = head1-> next;
+        }
+    }
+    return *output_ll;
+}
 
 
    int main(){

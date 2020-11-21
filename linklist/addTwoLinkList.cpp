@@ -21,14 +21,14 @@ using namespace std;
       temp->data = val;
       temp->next = NULL;
 
-      if (head == NULL) {
+      if (size == 0) {
         head = temp;
         tail = temp;
-      } 
-      else {
+      } else {
         tail->next = temp;
         tail = temp;
       }
+
       size++;
     }
 
@@ -178,64 +178,71 @@ using namespace std;
     }
   };
 
-    LinkedList oddEven(LinkedList l1){
-        LinkedList odd;
-        LinkedList even;
-        Node* ptr=l1.head;
-        LinkedList l;
-        Node* even_head=NULL;
-        Node* odd_head=NULL;
-        while(ptr!=NULL){
-                if(ptr->data %2 ==0){
-                    even.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
-                else{
-                    odd.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
+    int addtwolistHelper(Node* ptr1, int p1, Node* ptr2, int p2, LinkedList ans){
+        if(p1==0 && p2==0){
+            return 0;
         }
-       
-        if(odd.tail!=NULL){
-          odd.tail->next=even.head;
-          l.head=odd.head;
-
-          if(even.tail!=NULL){
-            l.tail=even.tail;
-          }
-          else{
-            l.tail=odd.tail;
-          }
-          l.size=odd.size+even.size;
+        int carry=0;
+        if(p1>p2){
+            carry=addtwolistHelper(ptr1->next, p1-1, ptr2, p2,ans);
+            carry=carry+ptr1->data;
+            // cout<<carry<<endl;
+            ans.addFirst(carry%10);
+            // cout<<ans.head->data;
+            carry=carry/10;
+        }
+        else if(p2>p1){
+            carry=addtwolistHelper(ptr1, p1, ptr2->next, p2-1, ans);
+            carry=carry+ptr2->data;
+            // cout<<carry<<endl;
+            ans.addFirst(carry%10);
+            // cout<<ans.head->data;
+            carry=carry/10;
         }
         else{
-          l.head=even.head;
-          l.tail=even.tail;
-          l.size=odd.size+even.size;
+            carry=addtwolistHelper(ptr1->next, p1-1, ptr2->next, p2-1, ans);
+            carry=carry+ptr2->data+ ptr1->data;
+            // cout<<carry<<endl;
+            ans.addFirst(carry%10);
+            // cout<<ans.head->data;
+            carry=carry/10;
         }
-        return l;
+        return carry;
+    }
 
+    LinkedList AddTwoLinkList(LinkedList l1, LinkedList l2){
+        LinkedList obj;
+        int carry= addtwolistHelper(l1.head, l1.size, l2.head, l2.size, obj);
+        obj.display();
+        while(carry){
+            obj.addFirst(carry%10);
+            carry=carry/10;
+        }
+        return obj;
     }
 
 
    int main(){
-       LinkedList obj1;
-       int size1;
+       LinkedList obj1, obj2;
+       int size1,size2;
        cin>>size1;
        for(int i=0;i<size1;i++){
            int val;
            cin>>val;
            obj1.addLast(val);
        }
-       obj1.display();
-       obj1= oddEven(obj1);
-       obj1.display();
+       cin>>size2;
+       for(int i=0;i<size2;i++){
+           int val;
+           cin>>val;
+           obj2.addLast(val);
+       }
 
-       int val1,val2;
-       cin>>val1;
-       obj1.addFirst(val1);
-       cin>>val2;
-       obj1.addLast(val2);
-       obj1.display();
+        LinkedList merged= AddTwoLinkList(obj1, obj2);
+        merged.display();
+        
+        // obj1.display();
+        // obj2.display();
+
        return 0;
    }

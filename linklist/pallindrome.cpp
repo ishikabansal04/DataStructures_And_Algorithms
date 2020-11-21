@@ -21,14 +21,14 @@ using namespace std;
       temp->data = val;
       temp->next = NULL;
 
-      if (head == NULL) {
+      if (size == 0) {
         head = temp;
         tail = temp;
-      } 
-      else {
+      } else {
         tail->next = temp;
         tail = temp;
       }
+
       size++;
     }
 
@@ -176,66 +176,48 @@ using namespace std;
           size--;
       } 
     }
-  };
 
-    LinkedList oddEven(LinkedList l1){
-        LinkedList odd;
-        LinkedList even;
-        Node* ptr=l1.head;
-        LinkedList l;
-        Node* even_head=NULL;
-        Node* odd_head=NULL;
-        while(ptr!=NULL){
-                if(ptr->data %2 ==0){
-                    even.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
-                else{
-                    odd.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
+Node* left=head;
+    bool isPalindromeHelper(Node* right){
+        // cout<<"hello";
+        if(right==NULL){
+          // cout<<"hi";
+            return true;
         }
-       
-        if(odd.tail!=NULL){
-          odd.tail->next=even.head;
-          l.head=odd.head;
-
-          if(even.tail!=NULL){
-            l.tail=even.tail;
-          }
-          else{
-            l.tail=odd.tail;
-          }
-          l.size=odd.size+even.size;
+        bool smallres=isPalindromeHelper(right->next);
+        
+        cout<<left->data <<"    "<<right->data<<endl;
+        if(smallres==false){
+          return false;
+        }
+        else if(left->data !=right->data){
+            return false;
         }
         else{
-          l.head=even.head;
-          l.tail=even.tail;
-          l.size=odd.size+even.size;
+           left=left->next;
+           return true;
         }
-        return l;
-
     }
 
+    bool isPalindrome(){
+        Node* right=head;
+        return isPalindromeHelper(right);
+        // return isPalindromeHelper(right);
+    }
+
+  };
 
    int main(){
-       LinkedList obj1;
-       int size1;
-       cin>>size1;
-       for(int i=0;i<size1;i++){
+       LinkedList obj;
+       int size;
+       cin>>size;
+       for(int i=0;i<size;i++){
            int val;
            cin>>val;
-           obj1.addLast(val);
+           obj.addLast(val);
        }
-       obj1.display();
-       obj1= oddEven(obj1);
-       obj1.display();
-
-       int val1,val2;
-       cin>>val1;
-       obj1.addFirst(val1);
-       cin>>val2;
-       obj1.addLast(val2);
-       obj1.display();
+       obj.display();
+       cout<<obj.isPalindromeHelper(obj.head);
+      //  cout<<obj.isPalindrome();
        return 0;
    }

@@ -21,14 +21,14 @@ using namespace std;
       temp->data = val;
       temp->next = NULL;
 
-      if (head == NULL) {
+      if (size == 0) {
         head = temp;
         tail = temp;
-      } 
-      else {
+      } else {
         tail->next = temp;
         tail = temp;
       }
+
       size++;
     }
 
@@ -178,64 +178,95 @@ using namespace std;
     }
   };
 
-    LinkedList oddEven(LinkedList l1){
-        LinkedList odd;
-        LinkedList even;
-        Node* ptr=l1.head;
-        LinkedList l;
-        Node* even_head=NULL;
-        Node* odd_head=NULL;
-        while(ptr!=NULL){
-                if(ptr->data %2 ==0){
-                    even.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
-                else{
-                    odd.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
+    LinkedList* MergeTwoSortedLinklist(LinkedList l1, LinkedList l2)
+{
+    LinkedList *output_ll = new LinkedList();
+    Node *head1 = l1.head;
+    Node *head2 = l2.head;
+    while (head1 != NULL && head2 != NULL)
+    {
+        if (head1->data <= head2->data)
+        {
+            output_ll->addLast(head1->data);
+            head1 = head1->next;
         }
-       
-        if(odd.tail!=NULL){
-          odd.tail->next=even.head;
-          l.head=odd.head;
+        else
+        {
+            output_ll->addLast(head2->data);
+            head2 = head2->next;
+        }
+    }
+    if (head1 == NULL)
+    {
+        while (head2 != NULL)
+        {
+            output_ll->addLast(head2->data);
+            head2 = head2-> next;
+        }
+    }
+    else
+    {
+        while (head1 != NULL)
+        {
+            output_ll->addLast(head1->data);
+            head1 = head1-> next;
+        }
+    }
+    return output_ll;
+}
 
-          if(even.tail!=NULL){
-            l.tail=even.tail;
-          }
-          else{
-            l.tail=odd.tail;
-          }
-          l.size=odd.size+even.size;
+    Node* getMid(Node* head, Node* tail){
+        if(head == NULL){
+            return NULL;
         }
-        else{
-          l.head=even.head;
-          l.tail=even.tail;
-          l.size=odd.size+even.size;
+        Node* slow=head;
+        Node* fast=head;
+        while(fast->next!=tail && fast!=NULL && fast!=tail){
+            fast=fast->next->next;
+            slow=slow->next;
         }
-        return l;
+        return slow;
+    }
 
+    LinkedList MergeSort(Node* head, Node* tail){
+        if(head==tail){
+            LinkedList l;
+            l.addLast(head->data);
+            return l;
+        }
+        // Node* mid=getMid(head, tail);
+        Node* slow=head;
+        Node* fast=head;
+        while(fast->next!=tail && fast!=NULL && fast!=tail){
+            fast=fast->next->next;
+            slow=slow->next;
+        }
+        Node* mid=slow;
+        LinkedList left= MergeSort(head, mid);
+        LinkedList right=MergeSort(mid->next, tail);
+        // cout<<left.head->data<<"    "<<right.head->data<<endl;
+        // left.display();
+        // right.display();
+        LinkedList *merged= MergeTwoSortedLinklist(left,right);
+        // merged.display();
+        return *merged;
     }
 
 
    int main(){
        LinkedList obj1;
-       int size1;
+       int size1,size2;
        cin>>size1;
        for(int i=0;i<size1;i++){
            int val;
            cin>>val;
            obj1.addLast(val);
        }
-       obj1.display();
-       obj1= oddEven(obj1);
-       obj1.display();
+        LinkedList merged = MergeSort(obj1.head, obj1.tail);
+        merged.display();
+        
+        obj1.display();
+        
 
-       int val1,val2;
-       cin>>val1;
-       obj1.addFirst(val1);
-       cin>>val2;
-       obj1.addLast(val2);
-       obj1.display();
        return 0;
    }

@@ -21,14 +21,14 @@ using namespace std;
       temp->data = val;
       temp->next = NULL;
 
-      if (head == NULL) {
+      if (size == 0) {
         head = temp;
         tail = temp;
-      } 
-      else {
+      } else {
         tail->next = temp;
         tail = temp;
       }
+
       size++;
     }
 
@@ -176,45 +176,63 @@ using namespace std;
           size--;
       } 
     }
+    
   };
 
-    LinkedList oddEven(LinkedList l1){
-        LinkedList odd;
-        LinkedList even;
-        Node* ptr=l1.head;
+    LinkedList reversePI(Node* head, int k){
+        LinkedList original;
         LinkedList l;
-        Node* even_head=NULL;
-        Node* odd_head=NULL;
-        while(ptr!=NULL){
-                if(ptr->data %2 ==0){
-                    even.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
-                else{
-                    odd.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
+        Node* p=head;
+        Node* q=head;
+        Node* tail=NULL;
+        Node* r=NULL;
+        while(q!=NULL && k>0){
+            original.addLast(q->data);
+            q=p->next;
+            p->next=r;
+            if(r==NULL){
+                l.tail=p;
+            }
+            r=p;
+            p=q;
+            k--;
         }
-       
-        if(odd.tail!=NULL){
-          odd.tail->next=even.head;
-          l.head=odd.head;
-
-          if(even.tail!=NULL){
-            l.tail=even.tail;
-          }
-          else{
-            l.tail=odd.tail;
-          }
-          l.size=odd.size+even.size;
+        if(k==0 && q!=NULL){
+            l.tail->next=q;
         }
-        else{
-          l.head=even.head;
-          l.tail=even.tail;
-          l.size=odd.size+even.size;
+        else if(k!=0){
+            return original;
         }
+        l.head=r;
+        l.size=k;
         return l;
+    }
 
+
+    LinkedList kReverse(LinkedList l1, int k){
+        LinkedList l, f;
+        Node* prevptr=NULL;
+        Node* ptr=l1.head;
+        Node* temp_head=l1.head;
+        Node* temp_tail=NULL;
+        while(ptr!=NULL){
+            l= reversePI(ptr, k);
+            if(prevptr ==NULL){
+                f.head=l.head;
+                f.tail=l.tail;
+                f.size=l.size;
+                prevptr=l.tail;
+            }
+            else{
+                f.tail->next=l.head;
+                prevptr->next=l.head;
+                f.tail=l.tail;
+                prevptr= l.tail;
+            }
+            ptr=l.tail->next;
+        }
+        f.size=l1.size;
+        return f;
     }
 
 
@@ -227,8 +245,10 @@ using namespace std;
            cin>>val;
            obj1.addLast(val);
        }
+       int k;
+       cin>>k;
        obj1.display();
-       obj1= oddEven(obj1);
+       obj1= kReverse(obj1, k);
        obj1.display();
 
        int val1,val2;

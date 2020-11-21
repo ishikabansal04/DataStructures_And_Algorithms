@@ -21,14 +21,14 @@ using namespace std;
       temp->data = val;
       temp->next = NULL;
 
-      if (head == NULL) {
+      if (size == 0) {
         head = temp;
         tail = temp;
-      } 
-      else {
+      } else {
         tail->next = temp;
         tail = temp;
       }
+
       size++;
     }
 
@@ -43,16 +43,21 @@ using namespace std;
       cout<<endl;
     }
 
-    void removeFirst() {
+    int removeFirst() {
+        int val;
       if (size == 0) {
         cout<<"List is empty"<<endl;
+        return -1;
       } else if (size == 1) {
+          val=head->data;
         head = tail = NULL;
         size = 0;
       } else {
+          val=head->data;
         head = head->next;
         size--;
       }
+      return val;
     }
 
      int getFirst() {
@@ -178,64 +183,53 @@ using namespace std;
     }
   };
 
-    LinkedList oddEven(LinkedList l1){
-        LinkedList odd;
-        LinkedList even;
-        Node* ptr=l1.head;
-        LinkedList l;
-        Node* even_head=NULL;
-        Node* odd_head=NULL;
-        while(ptr!=NULL){
-                if(ptr->data %2 ==0){
-                    even.addLast(ptr->data);
-                    ptr=ptr->next;
+
+
+int main(){
+    LinkedList obj;
+    
+    int front=-1;
+    int rear=-1;
+    string str;
+    do{
+        cin>>str;
+        if(str=="add"){
+            int val;
+            cin>>val;
+            obj.addLast(val);
+            rear++; 
+            if(front==-1){
+                front=0;
+            }
+        }
+        else if(str=="remove"){
+            if(obj.size==0){
+                cout<<"Queue underflow"<<endl;
+            }
+            else{
+                int data = obj.removeFirst();
+                if(data!=-1){
+                    cout<<data<<endl;
                 }
-                else{
-                    odd.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
+                
+            }
         }
-       
-        if(odd.tail!=NULL){
-          odd.tail->next=even.head;
-          l.head=odd.head;
-
-          if(even.tail!=NULL){
-            l.tail=even.tail;
-          }
-          else{
-            l.tail=odd.tail;
-          }
-          l.size=odd.size+even.size;
+        else if(str=="display"){
+                obj.display();
+                // cout<<endl;
         }
-        else{
-          l.head=even.head;
-          l.tail=even.tail;
-          l.size=odd.size+even.size;
+        else if(str=="peek"){
+            if(obj.size==0){
+                cout<<"Queue underflow"<<endl;
+            }
+            else{
+                cout<<obj.head->data<<endl;
+            }
+            
         }
-        return l;
-
-    }
-
-
-   int main(){
-       LinkedList obj1;
-       int size1;
-       cin>>size1;
-       for(int i=0;i<size1;i++){
-           int val;
-           cin>>val;
-           obj1.addLast(val);
-       }
-       obj1.display();
-       obj1= oddEven(obj1);
-       obj1.display();
-
-       int val1,val2;
-       cin>>val1;
-       obj1.addFirst(val1);
-       cin>>val2;
-       obj1.addLast(val2);
-       obj1.display();
-       return 0;
-   }
+        else if(str=="size"){
+                cout<<obj.size<<endl;
+        }
+    }while(str!="quit");
+    return 0;
+}

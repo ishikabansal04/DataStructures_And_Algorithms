@@ -143,18 +143,59 @@ using namespace std;
     }
 
 
-    Node* pointerRecursiveHelper(Node* node){
-        if(node==NULL) return NULL;
-        Node*temp= pointerRecursiveHelper(node->next);
-        temp->next=node;
-        return node;
-    }
-
-
-    void pointerRecursive(){
-        Node* temp=pointerRecursiveHelper(head);
+    Node* pointerRecursiveHelper(Node* left, Node* right){
+        if(right==tail) return right;
+        // cout<<right->data<<endl;
+        Node* temp= pointerRecursiveHelper(left, right->next);
         
+        if(right->next==tail){
+          head=temp;
+        }
+        temp->next=right;
+        // cout<<temp->data<<"   "<<temp->next->data<<endl;
+        if(right==left){
+          tail=right;
+          right->next=NULL;
+        }
+        // cout<<right->data<<endl;
+        return right;
     }
+
+    LinkedList pointerRecursive(){
+      LinkedList l;
+      l.head=tail;
+        Node* temp=pointerRecursiveHelper(head, head);
+        // cout<<temp->data<<endl;
+        l.tail=temp;
+        l.size=size;
+        return l;
+    }
+
+
+Node* reversePRHelper(Node *head){
+    if(head == NULL || head-> next == NULL){
+        return head;
+    }// * 1 2 3 4 5            (head1)5 4 3 2 1-> NULL
+    Node *head1 = reversePRHelper(head-> next);
+    Node *tail = head-> next;
+    tail-> next = head;
+    head-> next = NULL;
+    return head1;
+}
+
+public:
+
+void reversePR(){
+    Node *head1 = reversePRHelper(head);
+    Node *temp = head1;
+    tail= head;
+    head=temp;
+    while(temp != NULL){
+        cout << temp-> data << ' ';
+        temp=temp->next;
+    }
+    cout << '\n';
+}
 
      void removeAt(int idx) {
       // write your code here
@@ -194,63 +235,23 @@ using namespace std;
 
    int main(){
        LinkedList obj;
-       string str;
-    do{
-        cin>>str;
-        if(str=="addFirst"){
-            int val;
-            cin>>val;
-            obj.addFirst(val);
-            
-        }
-        
-        else if(str=="addLast"){
-            int val;
-            cin>>val;
-            obj.addLast(val);
-        }
-        else if(str=="addAt"){
-            int idx,val;
-            cin>>idx>>val;
-            obj.addAt(idx,val);
-        }
-        else if(str=="removeFirst"){
-            obj.removeFirst();
-        }
-        else if(str=="removeLast"){
-            obj.removeLast();
-        }
-        else if(str=="removeAt"){
-            int idx;
-            cin>>idx;
-            obj.removeAt(idx);
-        }
-        else if(str=="size"){
-            cout<<obj.sizeofList()<<endl;
-        }
-        else if(str=="display"){
-            obj.display();
-        }
-        else if(str=="getAt"){
-            int idx;
-            cin>>idx;
-            int val=obj.getAt(idx);
-            if(val!=-1){
-                cout<<val<<endl;
-            }
-        }
-        else if(str=="getFirst"){
-            int val=obj.getFirst();
-            if(val!=-1){
-                cout<<val<<endl;
-            }
-        }
-        else if(str=="getLast"){
-            int val=obj.getLast();
-            if(val!=-1){
-                cout<<val<<endl;
-            }
-        }
-    }while(str!="quit");
+       int size;
+       cin>>size;
+       for(int i=0;i<size;i++){
+           int val;
+           cin >>val;
+           obj.addLast(val);
+       }
+       obj.display();
+      //  obj= obj.pointerRecursive();
+      obj.reversePR();
+       obj.display();
+       cout<<obj.head->data<<"  "<<obj.tail->data<<endl;
+       int val1,val2;
+       cin>>val1>>val2;
+       obj.addLast(val1);
+       obj.addFirst(val2);
+
+       obj.display();
        return 0;
    }

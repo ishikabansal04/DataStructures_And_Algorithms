@@ -21,14 +21,14 @@ using namespace std;
       temp->data = val;
       temp->next = NULL;
 
-      if (head == NULL) {
+      if (size == 0) {
         head = temp;
         tail = temp;
-      } 
-      else {
+      } else {
         tail->next = temp;
         tail = temp;
       }
+
       size++;
     }
 
@@ -142,6 +142,7 @@ using namespace std;
       }
     }
 
+
      void removeAt(int idx) {
       // write your code here
       if(head==NULL){
@@ -176,66 +177,82 @@ using namespace std;
           size--;
       } 
     }
-  };
 
-    LinkedList oddEven(LinkedList l1){
-        LinkedList odd;
-        LinkedList even;
-        Node* ptr=l1.head;
-        LinkedList l;
-        Node* even_head=NULL;
-        Node* odd_head=NULL;
-        while(ptr!=NULL){
-                if(ptr->data %2 ==0){
-                    even.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
-                else{
-                    odd.addLast(ptr->data);
-                    ptr=ptr->next;
-                }
-        }
-       
-        if(odd.tail!=NULL){
-          odd.tail->next=even.head;
-          l.head=odd.head;
 
-          if(even.tail!=NULL){
-            l.tail=even.tail;
-          }
-          else{
-            l.tail=odd.tail;
-          }
-          l.size=odd.size+even.size;
+    Node* getMid(){
+        if(head == NULL){
+            return NULL;
         }
-        else{
-          l.head=even.head;
-          l.tail=even.tail;
-          l.size=odd.size+even.size;
+        Node* slow=head;
+        Node* fast=head;
+        while(fast->next!=tail && fast!=NULL && fast!=tail){
+            fast=fast->next->next;
+            slow=slow->next;
         }
-        return l;
-
+        return slow;
     }
 
+    LinkedList reversePI(Node* head,Node* tail){
+        LinkedList l;
+        Node* p=head;
+        Node* q=head;
+        Node* r=NULL;
+        while(q!=NULL){
+            q=p->next;
+            p->next=r;
+            if(r==NULL){
+                l.tail=p;
+            }
+            r=p;
+            p=q;
+        }
+        l.head=r;
+        return l;
+    }
+
+    void fold(){
+        Node* tail1=getMid();
+        Node* head2=tail1->next;
+        tail1->next=NULL;
+        Node* head1=head;
+        Node* tail2=tail;
+        LinkedList l;
+        l= reversePI(head2, tail2);
+        head2=l.head;
+        tail2=l.tail;
+        while(head1!=NULL && head2!=NULL){
+            Node* temp1=head1->next;
+            head1->next=head2;
+            Node* temp2=head2->next;
+            head2->next=temp1;
+            head1=temp1;
+            head2=temp2;
+        }
+        if(head1==NULL){
+            tail=tail2;
+        }
+        else{
+            tail=head1;
+        }
+    }
+
+  };
 
    int main(){
-       LinkedList obj1;
-       int size1;
-       cin>>size1;
-       for(int i=0;i<size1;i++){
+       LinkedList obj;
+       int size;
+       cin>>size;
+       for(int i=0;i<size;i++){
            int val;
-           cin>>val;
-           obj1.addLast(val);
+           cin >>val;
+           obj.addLast(val);
        }
-       obj1.display();
-       obj1= oddEven(obj1);
-       obj1.display();
-
+       obj.display();
+       obj.fold();
+       obj.display();
        int val1,val2;
-       cin>>val1;
-       obj1.addFirst(val1);
-       cin>>val2;
-       obj1.addLast(val2);
-       obj1.display();
-       return 0;
+       cin>>val1>>val2;
+       obj.addFirst(val1);
+       obj.addLast(val2);
+       obj.display();
    }
