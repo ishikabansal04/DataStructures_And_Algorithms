@@ -1,9 +1,8 @@
 #include<iostream>
 #include<vector>
 #include<stack>
+#include<queue>
 #include<string>
-#include<climits>
-#include<algorithm>
 using namespace std;
 
 class Node{
@@ -14,7 +13,7 @@ class Node{
 
 Node* construct(vector<int>arr){
     stack<Node*>stk;
-        Node* root=NULL;
+        Node* root;
 
     for(int i=0;i<arr.size();i++){
         Node* node=new Node;
@@ -50,40 +49,50 @@ void display(Node* root){
     }
 }
 
+class Pair{
+    public:
+    Node* node=NULL;
+    int state=-1;
+    Pair(Node* root){
+        this->node=root;
+        this->state=-1;
+    }
+};
 
-int Height(Node* root){
-    if(root==NULL){
-        return -1;
+void Traversal(Node* root){
+    vector<Node*>preorder;
+    vector<Node*>postorder;
+    stack<Pair*>stk;
+    Pair* mypair=new Pair(root);
+    stk.push(mypair);
+    while(stk.size()!=0){
+        Pair* rpair=stk.top();
+        stk.pop();
+        if(rpair->state==-1){
+            preorder.push_back(rpair->node);
+            rpair->state+=1;
+            stk.push(rpair);
+        }
+        else if(rpair->state==rpair->node->children.size()){
+            postorder.push_back(rpair->node);
+        }
+        else{
+            Pair* newpair= new Pair(rpair->node->children[rpair->state]);
+            rpair->state+=1;
+            stk.push(rpair);
+            stk.push(newpair);
+        }
     }
-    else if(root->children.size()==0){
-        return 0;
+
+    for(int i=0;i<preorder.size();i++){
+        cout<<preorder[i]->data<<" ";
     }
-    int height=0;
-    for(Node* child: root->children){
-        height=max(height,Height(child));
+    cout<<endl;
+     for(int i=0;i<preorder.size();i++){
+        cout<<postorder[i]->data<<" ";
     }
-    return 1+height;
 }
 
-
-int Diameter(Node* root){
-    if(root==NULL){
-        return -1;
-    }
-    int lh=INT_MIN;
-    int rh=INT_MIN;
-    int d=INT_MIN;
-    for(Node* child: root->children){
-        Diameter(child);
-    }
-    d=lh+rh+2;
-    d=max(d, max(lh+1 , rh+1));
-    for(Node* child: root->children){
-        rh=max(rh,lh);
-        lh=max(lh, Height(child));
-    }
-    return d;
-}
 
 int main(){
     int size;
@@ -95,5 +104,5 @@ int main(){
 
     Node* root=construct(arr);
     // display(root);
-    cout<<Diameter(root)<<endl;
+    Traversal(root);
 }

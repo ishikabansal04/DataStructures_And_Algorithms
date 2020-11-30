@@ -3,7 +3,6 @@
 #include<stack>
 #include<string>
 #include<climits>
-#include<algorithm>
 using namespace std;
 
 class Node{
@@ -14,7 +13,7 @@ class Node{
 
 Node* construct(vector<int>arr){
     stack<Node*>stk;
-        Node* root=NULL;
+        Node* root;
 
     for(int i=0;i<arr.size();i++){
         Node* node=new Node;
@@ -50,39 +49,23 @@ void display(Node* root){
     }
 }
 
-
-int Height(Node* root){
+// Node* cl=NULL;
+Node* fl=NULL;
+Node* previous=NULL;
+void FloorCeil(Node* root, int key){
+    
     if(root==NULL){
-        return -1;
+        return;
     }
-    else if(root->children.size()==0){
-        return 0;
+    if(root->data < key){
+        if(fl == NULL || root->data > fl->data){
+            fl = root;
+        }
     }
-    int height=0;
-    for(Node* child: root->children){
-        height=max(height,Height(child));
+    
+    for(Node*child: root->children){
+        FloorCeil(child, key);
     }
-    return 1+height;
-}
-
-
-int Diameter(Node* root){
-    if(root==NULL){
-        return -1;
-    }
-    int lh=INT_MIN;
-    int rh=INT_MIN;
-    int d=INT_MIN;
-    for(Node* child: root->children){
-        Diameter(child);
-    }
-    d=lh+rh+2;
-    d=max(d, max(lh+1 , rh+1));
-    for(Node* child: root->children){
-        rh=max(rh,lh);
-        lh=max(lh, Height(child));
-    }
-    return d;
 }
 
 int main(){
@@ -95,5 +78,18 @@ int main(){
 
     Node* root=construct(arr);
     // display(root);
-    cout<<Diameter(root)<<endl;
+    int k;
+    cin>>k;
+
+    int key=INT_MAX;
+
+    for(int i=0;i<k;i++){   
+        FloorCeil(root, key);
+        key=fl->data;
+        // cout<<fl->data<<"               ";
+        fl=NULL;
+        // cout<<key<<endl;
+    }
+
+    cout<<key;
 }

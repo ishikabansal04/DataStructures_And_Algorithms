@@ -4,6 +4,8 @@
         "xstring": "cpp",
         "ostream": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "vector": "cpp",
+        "unordered_map": "cpp"
     }
 }

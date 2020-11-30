@@ -3,7 +3,6 @@
 #include<stack>
 #include<string>
 #include<climits>
-#include<algorithm>
 using namespace std;
 
 class Node{
@@ -14,7 +13,7 @@ class Node{
 
 Node* construct(vector<int>arr){
     stack<Node*>stk;
-        Node* root=NULL;
+        Node* root;
 
     for(int i=0;i<arr.size();i++){
         Node* node=new Node;
@@ -50,39 +49,26 @@ void display(Node* root){
     }
 }
 
+Node* temp=NULL;
+int maxsum=INT_MIN;
 
-int Height(Node* root){
+int MaxTreeSum(Node* root){
     if(root==NULL){
-        return -1;
-    }
-    else if(root->children.size()==0){
         return 0;
     }
-    int height=0;
-    for(Node* child: root->children){
-        height=max(height,Height(child));
+    // else if(root->children.size()==0){           this condition is not req as it will simplely return from leaf node
+    //     return root->data;                       & wll not consider the case when leaf node has max sum.
+    // }       
+    int smallsum=0;
+    for(Node* child:root->children){
+        smallsum+=MaxTreeSum(child);
     }
-    return 1+height;
-}
-
-
-int Diameter(Node* root){
-    if(root==NULL){
-        return -1;
+    smallsum+=root->data;
+    if(smallsum > maxsum){
+        maxsum=smallsum;
+        temp=root;
     }
-    int lh=INT_MIN;
-    int rh=INT_MIN;
-    int d=INT_MIN;
-    for(Node* child: root->children){
-        Diameter(child);
-    }
-    d=lh+rh+2;
-    d=max(d, max(lh+1 , rh+1));
-    for(Node* child: root->children){
-        rh=max(rh,lh);
-        lh=max(lh, Height(child));
-    }
-    return d;
+    return smallsum;
 }
 
 int main(){
@@ -95,5 +81,6 @@ int main(){
 
     Node* root=construct(arr);
     // display(root);
-    cout<<Diameter(root)<<endl;
+    MaxTreeSum(root);
+    cout<<temp->data<<"@"<<maxsum<<endl;
 }

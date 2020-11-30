@@ -2,8 +2,6 @@
 #include<vector>
 #include<stack>
 #include<string>
-#include<climits>
-#include<algorithm>
 using namespace std;
 
 class Node{
@@ -14,7 +12,7 @@ class Node{
 
 Node* construct(vector<int>arr){
     stack<Node*>stk;
-        Node* root=NULL;
+        Node* root;
 
     for(int i=0;i<arr.size();i++){
         Node* node=new Node;
@@ -50,41 +48,50 @@ void display(Node* root){
     }
 }
 
-
-int Height(Node* root){
+void NodeToRootPath(Node* root, int key, vector<Node*>&path){
     if(root==NULL){
-        return -1;
+        return;
     }
-    else if(root->children.size()==0){
-        return 0;
+    if(root->data == key){
+        path.push_back(root);
+        return;
     }
-    int height=0;
     for(Node* child: root->children){
-        height=max(height,Height(child));
+        NodeToRootPath(child, key, path);
+        if(path.size()!=0){
+            break;
+        }
     }
-    return 1+height;
+    if(path.size()!=0){
+        path.push_back(root);
+        return;
+    }
 }
 
+int DistanceBetween2Nodes(Node* root, int val1, int val2){
+    vector<Node*>path1, path2;
+    NodeToRootPath(root, val1, path1);
 
-int Diameter(Node* root){
-    if(root==NULL){
-        return -1;
+    NodeToRootPath(root, val2, path2);
+
+bool flag=false;
+    Node* LCA=NULL;
+    int dist=0;
+    for(int i=0;i<path1.size();i++){
+        for(int j=0;j<path2.size();j++){
+            if(path1[i]->data == path2[j]->data){
+                LCA=path1[i];
+                dist=i+j;
+                flag=true;
+                break;
+            }
+        }
+        if(flag==true){
+            break;
+        }
     }
-    int lh=INT_MIN;
-    int rh=INT_MIN;
-    int d=INT_MIN;
-    for(Node* child: root->children){
-        Diameter(child);
-    }
-    d=lh+rh+2;
-    d=max(d, max(lh+1 , rh+1));
-    for(Node* child: root->children){
-        rh=max(rh,lh);
-        lh=max(lh, Height(child));
-    }
-    return d;
+    return dist;
 }
-
 int main(){
     int size;
     cin>>size;
@@ -93,7 +100,13 @@ int main(){
         cin>>arr[i];
     }
 
+    int val1, val2;
+    cin>>val1>>val2;
+
     Node* root=construct(arr);
     // display(root);
-    cout<<Diameter(root)<<endl;
+    
+    cout<<DistanceBetween2Nodes(root, val1, val2);
+    // cout<<lca->data<<endl;
+    
 }
