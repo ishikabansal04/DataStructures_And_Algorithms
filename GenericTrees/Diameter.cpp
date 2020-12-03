@@ -50,7 +50,6 @@ void display(Node* root){
     }
 }
 
-
 int Height(Node* root){
     if(root==NULL){
         return -1;
@@ -65,6 +64,7 @@ int Height(Node* root){
     return 1+height;
 }
 
+int maximum=INT_MIN;
 
 int Diameter(Node* root){
     if(root==NULL){
@@ -76,12 +76,22 @@ int Diameter(Node* root){
     for(Node* child: root->children){
         Diameter(child);
     }
-    d=lh+rh+2;
-    d=max(d, max(lh+1 , rh+1));
+    Node* tempnode=NULL;
     for(Node* child: root->children){
-        rh=max(rh,lh);
-        lh=max(lh, Height(child));
+        if(rh< Height(child)){
+            tempnode=child;
+        }
+        rh=max(rh,Height(child));
     }
+
+    for(Node* child:root->children){
+        if(child!=tempnode){
+            lh=max(lh, Height(child));
+        }
+    }
+    d=lh+rh+2;
+    maximum=max(maximum, d);
+    
     return d;
 }
 
