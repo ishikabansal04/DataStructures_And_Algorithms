@@ -1,126 +1,84 @@
-#include <iostream>
-#include <unordered_map>
-#include <list>
-#include<vector>
-#include<queue>
+#include<iostream>
+#include<algorithm>
 #include<climits>
 using namespace std;
 
-//? Better Code(GENERIC), works on windows(mingw compiler), doesn't work in macos(Xcode compiler)
-
-// template <typename all>
-// class Graph
-// {
-//     unordered_map<all, list<all> > gmap;
-
-// public:
-//     void addEdge(all u, all v, bool bidir = true)
-//     {
-//         gmap[u].push_back(v);
-//         if (bidir)
-//         {
-//             gmap[v].push_back(u);
-//         }
-//     }
-
-//     unordered_map<all, int>* shortestPath(all src){
-//         unordered_map<all, int> *distance = new unordered_map<all, int>();
-//         unordered_map<all, int> visited;
-//         queue<all> q;
-//         q.push(src);
-//         visited[src] = 1;
-//         distance-> insert({src, 0});
-//         while(!q.empty()){
-//             all front = q.front();
-//             q.pop();
-//             for(auto neighbour : gmap[front]){
-//                 if(visited.count(neighbour) == 0){
-//                     q.push(neighbour);
-//                     visited[neighbour] = 1;
-//                     distance-> insert({neighbour, distance-> at(front) + 1});
-//                 }
-//             }
-//         }
-//         return distance;    
-//     }
-// };
-
-
-// ? For integer data only
-class Graph
-{
-    int vertices;
-    list<int> *l;
-
-public:
-    Graph(int vertices)
-    {
-        this->vertices = vertices;
-        l = new list<int>[vertices];
-    }
-
-    void addEdge(int u, int v, bool bidir = true)
-    {
-        l[u].push_back(v);
-        if (bidir)
-        {
-            l[v].push_back(u);
+int vtx_finder(int V, int *weight, bool *visited){
+    int min_weight = INT_MAX;
+    int min_index = -1;
+    for(int i = 0; i < V; i++){
+        if(visited[i] == false && weight[i] < min_weight){
+            min_weight = weight[i];
+            min_index = i;
         }
     }
+    return min_index;
+}
 
-    void display()
-    {
-        for (int i = 0; i < vertices; i++)
-        {
-            cout << i << "==> {";
-            for (int j : l[i])
-            {
-                cout << j << ", ";
-            }
-            cout << " }" << '\n';
+void prims(int V, int E, int* *edges){
+    int *parent = new int[V];
+    int *weight = new int[V];
+    for(int i = 0; i < V; i++){
+        parent[i] = -1;
+        if(i == 0){
+            weight[i] = 0;
+        }
+        else{
+            weight[i] = INT_MAX;
         }
     }
-
-    vector<int> shortestPath(int src){
-        vector<int>distance(vertices);
-        for(int i : distance){
-            i = 1;
-        }
-        for(int i=0;i<distance.size();i++){
-            cout<<distance[i]<<" ";
-        }
-        cout<<endl;
-        queue<int> q;
-        q.push(src);
-        distance[src] = 0;
-        while(!q.empty()){
-            int front = q.front();
-            q.pop();
-            for(auto i : l[front]){
-                if(distance[i] == INT_MAX){
-                    q.push(i);
-                    distance[i] = distance[front] + 1;
-                }
-            }
-        }
-        return distance;
+    bool *visited = new bool[V];
+    for(int i = 0; i < V; i++){
+        visited[i] = false;
     }
-};
+    int count = 0;
+    while(count < V){
+       int curr_vtx = vtx_finder(V, weight, visited);
+       visited[curr_vtx] = true;
+       count++;
+       for (int i = 0; i < V; i++)
+       {
+           if (edges[curr_vtx][i] != -1 && visited[i] == false)
+           {
+               if (edges[curr_vtx][i] < weight[i])
+               {
+                   weight[i] = edges[curr_vtx][i];
+                   parent[i] = curr_vtx;
+               }
+           }
+       }
+   }
+   for(int i = 1; i < V; i++){
+       if(i < parent[i]){
+           cout << i << " " << parent[i] << " " << weight[i];
+       }
+       else{
+           cout << parent[i] << " " << i << " " << weight[i];
+       } 
+       cout << '\n';
+   }
+}
 
 
 int main(){
-    int v;
-    cin >> v;
-    Graph g(v);
-    g.addEdge(0, 1);
-    g.addEdge(0, 4);
-    g.addEdge(1, 2);
-    g.addEdge(2, 3);
-    g.addEdge(2, 4);
-    g.addEdge(3, 4);
-    g.addEdge(3, 5);
-    vector<int> output = g.shortestPath(0);
-    for(int i = 0; i < output.size(); i++){
-        cout << "The shortest path of " << i << " from the source vertex: " << output[i] << '\n';
+    int V, E, u, v, w;
+    cin >> V >> E;
+    int** edges = new int*[V];
+    for(int i = 0; i < V; i++){
+        edges[i] = new int[V];
     }
+
+    for(int i = 0; i < V; i++){
+        for(int j = 0; j < V; j++){
+            edges[i][j] = -1;
+        }
+    }
+
+    for(int i = 0; i < E; i++){
+        cin >> u >> v >> w;
+        edges[u][v] = w;
+        edges[v][u] = w;
+    }
+
+     prims(V, E, edges);
 }

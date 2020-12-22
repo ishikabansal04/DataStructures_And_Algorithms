@@ -5,7 +5,7 @@
 #include<vector>
 #include<unordered_map>
 #include<queue>
-#include<stack>
+#include<algorithm>
 using namespace std;
 
 template<typename T>
@@ -30,53 +30,47 @@ class Graph{
         }
     }
 
-    void DFS(T st, vector<bool>&vis, stack<int>&stk){
+    void DFS(T st,T dest, vector<string>&path, vector<bool>&vis, string str){
+        if(st==dest){
+            str=str+to_string(dest);
+            path.push_back(str);
+        }
         if(vis[st]){
             return;
         }
         vis[st]=true;
+        
         for(auto i: gmap[st]){
             if(!vis[i]){
-                DFS(i, vis, stk);
+                DFS(i, dest, path, vis, str+to_string(i));
+                
             }
         }
-        stk.push(st);
-    }
-    stack<T> tsort(int vtx){
-        vector<bool>vis(vtx, false);
-        stack<T>stk;
-        for(int i=0;i<vtx;i++){
-            if(!vis[i]){
-                DFS(i, vis, stk);
-            }
-        }
-        return stk;
     }
 };
 
 int main(){
-    
-    int vtx;
-    cin>>vtx;
-    int edges;
-    cin>>edges;
+    int vtx,edges;
+    cin>>vtx>>edges;
     Graph<int> g;
     for(int i=0;i<edges;i++){
-        int a,b;
-        cin>>a>>b;
-        g.addEdge(a,b,false);
+        int a,b,c;
+        cin>>a>>b>>c;
+        g.addEdge(a,b);
     }
-    // g.addEdge(0, 1);
-    // g.addEdge(0, 4);
-    // g.addEdge(1, 2);
-    // g.addEdge(2, 3);
-    // g.addEdge(3, 5);
-    // g.addEdge(3, 4);
-    // g.addEdge(2, 4);
-    stack<int>stk;
-    stk= g.tsort(vtx);
-    while(stk.size()){
-            cout<<stk.top()<<endl;
-            stk.pop();
-        }
+    
+    int src;
+    cin>>src;
+    int dest;
+    cin>>dest;
+
+
+    vector<string>path;
+    vector<bool>vis(vtx, false);
+
+    g.DFS(src, dest, path, vis , "");
+    sort(path.begin(), path.end());
+    for(int i=0;i<path.size();i++){
+        cout<<path[i]<<endl;
+    }
 }
