@@ -1,3 +1,5 @@
+//dijkstra using sets (Optimized version)
+
 #include<iostream>
 #include<algorithm>
 #include<vector>
@@ -56,7 +58,7 @@ class Graph{
     }
     
         
-    void dijkstra(priority_queue<Vertex*>&pq){
+    void prims(priority_queue<Vertex*>&pq){
         int* distance =new int[gmap.size()];
         for(int i=0;i<gmap.size();i++){
             distance[i]=INT_MAX;
@@ -73,7 +75,7 @@ class Graph{
             for(auto i:gmap[minvtx->v]){
                 if(!visited[i.first]){
                     if(distance[i.first]>i.second){
-                        distance[i.first]=distance[minvtx->v]+ i.second;
+                        distance[i.first]=i.second;
                     }
                 }
             }
@@ -107,6 +109,6 @@ int main(){
         pq.push(vtx);
     }
 
-    g.dijkstra(pq);
+    g.prims(pq);
 
 }

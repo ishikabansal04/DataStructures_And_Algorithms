@@ -1,84 +1,60 @@
 #include<iostream>
 #include<algorithm>
+#include<vector>
+#include<queue>
 #include<climits>
 using namespace std;
 
-int vtx_finder(int V, int *weight, bool *visited){
-    int min_weight = INT_MAX;
-    int min_index = -1;
-    for(int i = 0; i < V; i++){
-        if(visited[i] == false && weight[i] < min_weight){
-            min_weight = weight[i];
-            min_index = i;
+int findMinVtx(vector<int>&distance, vector<int>&visited, int v){
+    int minvtx=-1;
+    
+    for(int i=0;i<v;i++){
+        if(!visited[i] && (minvtx==-1 || distance[i]<distance[minvtx])){
+           
+            minvtx=i;
         }
     }
-    return min_index;
+    return minvtx;
+} 
+
+void dijkstra(vector<vector<int>> &edges, int vtx){
+
+    vector<int>distance(vtx, INT_MAX);
+    vector<int>visited(vtx, false);
+    distance[0]=0;
+
+    for(int i=0;i<vtx-1;++i){
+         int currvtx= findMinVtx(distance, visited, vtx);
+         
+         visited[currvtx]=true;
+         for(int j=0;j<vtx;++j){
+              
+             if(edges[currvtx][j]!=0 && !visited[j]){
+                 int dist=distance[currvtx]+edges[currvtx][j];
+                 if(dist<distance[j]){
+                     distance[j]=dist;
+                 }
+             }
+         }
+    }
+    for(int i=0;i<vtx;++i){
+        cout<<i<<" "<<distance[i]<<"\n";
+    }
+    
 }
-
-void prims(int V, int E, int* *edges){
-    int *parent = new int[V];
-    int *weight = new int[V];
-    for(int i = 0; i < V; i++){
-        parent[i] = -1;
-        if(i == 0){
-            weight[i] = 0;
-        }
-        else{
-            weight[i] = INT_MAX;
-        }
-    }
-    bool *visited = new bool[V];
-    for(int i = 0; i < V; i++){
-        visited[i] = false;
-    }
-    int count = 0;
-    while(count < V){
-       int curr_vtx = vtx_finder(V, weight, visited);
-       visited[curr_vtx] = true;
-       count++;
-       for (int i = 0; i < V; i++)
-       {
-           if (edges[curr_vtx][i] != -1 && visited[i] == false)
-           {
-               if (edges[curr_vtx][i] < weight[i])
-               {
-                   weight[i] = edges[curr_vtx][i];
-                   parent[i] = curr_vtx;
-               }
-           }
-       }
-   }
-   for(int i = 1; i < V; i++){
-       if(i < parent[i]){
-           cout << i << " " << parent[i] << " " << weight[i];
-       }
-       else{
-           cout << parent[i] << " " << i << " " << weight[i];
-       } 
-       cout << '\n';
-   }
-}
-
-
 int main(){
-    int V, E, u, v, w;
-    cin >> V >> E;
-    int** edges = new int*[V];
-    for(int i = 0; i < V; i++){
-        edges[i] = new int[V];
+    int vtx,edge;
+    cin>>vtx>>edge;
+    
+    vector<vector<int>> edges(vtx ,vector<int>(vtx,0));
+    
+    for(int i=0, s, d, w;i<edge;++i){
+      
+        cin>>s>>d>>w;
+        edges[s][d]=w;
+        edges[d][s]=w;
     }
 
-    for(int i = 0; i < V; i++){
-        for(int j = 0; j < V; j++){
-            edges[i][j] = -1;
-        }
-    }
-
-    for(int i = 0; i < E; i++){
-        cin >> u >> v >> w;
-        edges[u][v] = w;
-        edges[v][u] = w;
-    }
-
-     prims(V, E, edges);
+    cout<<endl;
+    dijkstra(edges,vtx);
 }

@@ -1,21 +1,11 @@
+//using Adjacency Matrix
+
 #include<iostream>
 #include<algorithm>
 #include<vector>
 #include<queue>
 #include<climits>
 using namespace std;
-
-class Edge{
-    public:
-    int u;
-    int v;
-    int w;
-    Edge(){
-        u=0;
-        v=0;
-        w=0;
-    }
-};
 
 int findMinVtx(int *weights, bool*visited, int size){
     int minvtx=-1;
@@ -31,16 +21,6 @@ int findMinVtx(int *weights, bool*visited, int size){
 
 void dijkstra(int **arr, int vtx){
 
-
-    // int **output=new int*[vtx];
-    // for(int i=0;i<vtx;i++){
-    //     output[i]=new int[vtx];
-    // }
-    // for(int i=0;i<vtx;i++){
-    //     for(int j=0;j<vtx;j++){
-    //         output[i][j]=-1;
-    //     }
-    // }
 
     int* parent =new int[vtx];
     for(int i=0;i<vtx;i++){
@@ -64,7 +44,6 @@ void dijkstra(int **arr, int vtx){
              
              continue;
          }
-        //  cout<<currvtx<<"    "<<parent[currvtx]<<"    " <<weights[currvtx]<<endl;
          visited[currvtx]=true;
          for(int i=0;i<vtx;i++){
               
@@ -77,19 +56,12 @@ void dijkstra(int **arr, int vtx){
                  }
              }
          }
-        //  output[parent[currvtx]][currvtx]=weights[currvtx];
         count++; 
     }
     for(int i=0;i<vtx;i++){
         cout<<i<<"      "<<parent[i]<<"      "<<weights[i]<<endl;
     }
-    // for(int i=0;i<vtx;i++){
-    //     for(int j=0;j<vtx;j++){
-    //         cout<<output[i][j]<<"      ";
-    //     }
-    //     cout<<endl;
-    // }
-    // cout<<endl;
+
 
 }
 int main(){
