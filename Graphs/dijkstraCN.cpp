@@ -17,11 +17,11 @@ int findMinVtx(vector<int>&distance, vector<int>&visited, int v){
     return minvtx;
 } 
 
-void dijkstra(vector<vector<int>> &edges, int vtx){
+void dijkstra(vector<vector<int>> &edges, int vtx, int start){
 
     vector<int>distance(vtx, INT_MAX);
     vector<int>visited(vtx, false);
-    distance[0]=0;
+    distance[start]=0;
 
     for(int i=0;i<vtx-1;++i){
          int currvtx= findMinVtx(distance, visited, vtx);
@@ -38,23 +38,39 @@ void dijkstra(vector<vector<int>> &edges, int vtx){
          }
     }
     for(int i=0;i<vtx;++i){
-        cout<<i<<" "<<distance[i]<<"\n";
+        if(i==start) continue;
+        if(distance[i]!=INT_MAX)
+        cout<<distance[i]<<" ";
+        else{
+            cout<<"-1 ";
+        }
     }
     
 }
 int main(){
-    int vtx,edge;
-    cin>>vtx>>edge;
-    
-    vector<vector<int>> edges(vtx ,vector<int>(vtx,0));
-    
-    for(int i=0, s, d, w;i<edge;++i){
-      
-        cin>>s>>d>>w;
-        edges[s][d]=w;
-        edges[d][s]=w;
+ std::ios::sync_with_stdio(false);
+    int tc;
+    cin>>tc;
+    for(int t=0;t<tc;t++){
+        int vtx,edge;
+        cin>>vtx>>edge;
+        
+        vector<vector<int>> edges(vtx ,vector<int>(vtx,0));
+        
+        for(int i=0, s, d, w;i<edge;++i){
+        
+            cin>>s>>d>>w;
+            s=s-1;
+            d=d-1;
+            edges[s][d]=w;
+            edges[d][s]=w;
+        }
+        int start;
+        cin>>start;
+        
+        dijkstra(edges,vtx, start);
+        cout<<endl;
     }
-
-    cout<<endl;
-    dijkstra(edges,vtx);
+    return 0;
+    
 }

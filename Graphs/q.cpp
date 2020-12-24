@@ -1,79 +1,74 @@
-//using Adjacency Matrix
-
 #include<iostream>
-#include<algorithm>
-#include<vector>
 #include<queue>
-#include<climits>
+#include<list>
+#include<unordered_map>
+#include<vector>
 using namespace std;
 
-int findMinVtx(vector<int>&weights, vector<bool>&visited, int size){
-    int minvtx=-1;
-    int minwt=INT_MAX;
-    for(int i=0;i<size;i++){
-        if(!visited[i] && weights[i]<minwt){
-            minwt=weights[i];
-            minvtx=i;
-        }
-    }
-    return minvtx;
-}
+class Graph{
+public: 
+    unordered_map<int, list<int> > gmap;
 
-void dijkstra(vector<vector<int>>&arr, int vtx, int start){
-    vector<int>weights(vtx, INT_MAX);
-    vector<bool>visited(vtx, false);
-    weights[start]=0;
-    int count=0;
-    while(count<vtx){
-         int currvtx= findMinVtx(weights, visited, vtx);
-         if(currvtx==-1 || visited[currvtx]){
-             count++;
-             
-             continue;
-         }
-         visited[currvtx]=true;
-         for(int i=0;i<vtx;i++){
-              
-             if(arr[currvtx][i]!=-1 && !visited[i]){
-                 if(weights[i]>arr[currvtx][i] + weights[currvtx]){
-                     
-                     weights[i]=weights[currvtx]+arr[currvtx][i];
-                     
-                 }
-             }
-         }
-        count++; 
-    }
-    for(int i=0;i<vtx;i++){
-        if(i==start){
-            continue;
+    void addEdge(int src, int dest, bool bidir = true){
+        gmap[src].push_back(dest);
+        if(bidir){
+            gmap[dest].push_back(src);
         }
-        else if(weights[i]==INT_MAX){
-            cout<<"-1 ";
+    } 
+
+    void bfs(int V, int E, int src){
+        queue<int> q;
+        vector<bool> visited(V, false);
+        vector<int> distance(V, -1);
+        distance[src] = 0; 
+        q.push(src);
+        while(!q.empty()){
+            int front = q.front();
+            q.pop();
+            visited[front] = true;
+            for(int neighbour : gmap[front]){
+                if(visited[neighbour] == false){
+                    q.push(neighbour);
+                    distance[neighbour] = distance[front] + 1;
+                }
+            }
         }
-        else
-        cout<<weights[i]<<" ";
+        for(int i = 0; i < V; i++){
+
+            if(i == src){
+                continue;
+            }
+
+            if(distance[i] != -1){
+                cout << (6 * distance[i]) << " ";
+            }
+            else{
+                cout << distance[i] << " ";
+            }
+        }
     }
-}
+
+};
+
+
 int main(){
-    std::ios::sync_with_stdio(false);
-    int t;
-    cin>>t;
-    for(int tc=0;tc<t;tc++){
-        int vtx,edges;
-        cin>>vtx>>edges;
-        vector<vector<int>>arr(vtx, vector<int>(vtx, -1));
-    
-        for(int i=0;i<edges;i++){
-            int a,b, w;
-            cin>>a>>b>>w;
-            arr[a-1][b-1]=w;
-            arr[b-1][a-1]=w;
+    std::ios_base::sync_with_stdio(false);
+    //cin.tie(NULL);
+    int tc;
+    cin >> tc;
+    for(int i = 0; i < tc; i++){
+        Graph g;
+        int V, E, u, v, src;
+        cin >> V >> E;
+        for (int i = 0; i < E; i++)
+        {
+            cin >> u >> v;
+            g.addEdge(u - 1, v - 1);
         }
-        int start;
-        cin>>start;        
-        dijkstra(arr,vtx, start-1);
-        cout<<endl;
+        cin >> src;
+        src -= 1;
+        g.bfs(V, E, src);
+        cout << '\n';
     }
-
+    return 0;
 }
