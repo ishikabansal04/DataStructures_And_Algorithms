@@ -6,6 +6,7 @@
         "map": "cpp",
         "queue": "cpp",
         "utility": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "ostream": "cpp"
     }
 }

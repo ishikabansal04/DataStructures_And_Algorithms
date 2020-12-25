@@ -17,9 +17,9 @@ class Edge{
     }
 };
 
-void BellmenFord(int V, int E, int start, Edge* arr){
+bool BellmenFord(int V, int E, Edge* arr){
     vector<int>distance(V, INT_MAX);
-    distance[start]=0;
+    distance[0]=0;
 
     for(int i=0;i<V-1;i++){
         for(int j=0;j<E;j++){
@@ -39,32 +39,28 @@ void BellmenFord(int V, int E, int start, Edge* arr){
             int weight= arr[j].w;
             if(distance[src]+ weight < distance[dest]){
                 isNeg=true;
-                distance[dest]=INT_MAX;
-                // break;
+                break;
             }
     }
 
-    // if(isNeg){
-    //     cout<<"Graph contains negative weight cycle"<<endl;
-    // }
-    // else{
-        for(int i=0;i<V;i++){
-            cout<<distance[i]<<" "<<endl;
-        }
-    // }
+    return isNeg;
 }
 
 int main(){
-    int vtx,edges;
-    cin>>vtx>>edges;
-    Edge* arr = new Edge[edges];
-    for(int i=0;i<edges;i++){
-        cin>>arr[i].u;
-        cin>>arr[i].v;
-        cin>>arr[i].w;
+    int tc;
+    cin>>tc;
+    for(int t=0;t<tc;t++){
+        int vtx,edges;
+        cin>>vtx>>edges;
+        Edge* arr = new Edge[edges];
+        for(int i=0;i<edges;i++){
+            cin>>arr[i].u;
+            cin>>arr[i].v;
+            cin>>arr[i].w;
+        }
+        
+         cout<< BellmenFord(vtx, edges, arr)<<endl;
     }
-    int start;
-    cin>>start;
-     BellmenFord(vtx, edges, start, arr);
+    
      return 0;
 }
