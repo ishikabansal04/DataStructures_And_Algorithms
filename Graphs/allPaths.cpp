@@ -30,7 +30,7 @@ class Graph{
         }
     }
 
-    void DFS(T st,T dest, vector<string>&path, vector<bool>&vis, string str){
+    void DFS(T st,T dest, vector<string>&path, vector<bool>vis, string str){
         if(st==dest){
             str=str+to_string(dest);
             path.push_back(str);
@@ -39,11 +39,13 @@ class Graph{
             return;
         }
         vis[st]=true;
-        
+        str=str+to_string(st);
         for(auto i: gmap[st]){
             if(!vis[i]){
-                DFS(i, dest, path, vis, str+to_string(i));
-                
+                DFS(i, dest, path, vis, str);
+                // if we add in the arguments itself then src vertex is not printed ... so in order to add src to string 
+                //as well we need to keep str+to_string(st) outside this loop
+                //but then dest vertex is not added so we add dest vertex in base condition.
             }
         }
     }

@@ -56,8 +56,7 @@ class Graph{
         }
     }
 
-    void DFS(T st, stack<T>* stk, unordered_map<T,bool>&vis){
-        // cout<<st<<endl;
+    void DFS(T st, vector<T>&stk, unordered_map<T,bool>&vis){
         if(vis.count(st)>0){
             return;
         }
@@ -73,15 +72,14 @@ class Graph{
                 }
         }
         
-        stk->push(st);
-        // cout<<stk->top()<<endl;
+        stk.push_back(st);
     }
 
-    void DFS2(T st, stack<T>* stk, unordered_map<T,bool>&vis2){
+    void DFS2(T st, vector<T>&stk, unordered_map<T,bool>&vis2){
         if(vis2[st]){
             return;
         }
-        cout<<st<<"         ";
+        cout<<st<<"  ";
         vis2[st]=true;
         
         for(auto i: Tmap[st]){
@@ -89,26 +87,15 @@ class Graph{
                     continue;
                 }
                 else{
-                    cout<<stk->top()<<endl;
-                    if(stk->top()==i){
-                      stk->pop();
                     DFS2(i, stk, vis2);
                 }
             }
-        }
-        
     }
 
 
     int KosaRaju(int vtx){
-        stack<T>*stk=new stack<T>;
-        
-        // for(int i=0;i<vtx;i++){
-        //     if(!vis[i]){
-        //         // cout<<i<<endl;
-        //         DFS(i, stk, vis);
-        //     }
-        // }
+        vector<T>stk;
+  
         unordered_map<T,bool>vis;
         for(auto vtx:gmap){
            
@@ -116,6 +103,7 @@ class Graph{
                     continue;
                 }
                 else{
+
                     DFS(vtx.first, stk, vis);
                 }
                 
@@ -125,14 +113,18 @@ class Graph{
         display2();
         int count=0;
         unordered_map<T,bool>vis2;
-        while(stk->size()!=0){
-            // cout<<stk->top()<<endl;
-            T rn=stk->top();
-            stk->pop();
-            
-            DFS2(rn, stk, vis2);
-            // cout<<count<<endl;
-            count++;
+        for(int i=stk.size()-1;i>=0;i--){
+            if(vis2.count(stk[i])>0){
+                
+                continue;
+            }
+            else{
+                T rn=stk[i];
+                count++;
+                DFS2(rn, stk, vis2);
+                
+            }
+          
         }
         return count;
     }
