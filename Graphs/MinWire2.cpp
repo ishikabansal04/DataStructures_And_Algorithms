@@ -48,6 +48,7 @@ void prims( int v, int e){
             cout<<"["<<newpair.second<<"-"<<parent[newpair.second]<<"@"<<distance[newpair.second]<<"]"<<endl;
         
         }
+      
 
         visited[newpair.second]=true;
         for(auto i: gmap[newpair.second]){
