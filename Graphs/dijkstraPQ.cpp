@@ -171,7 +171,7 @@ public:
 };
 
 int main(){
-    std::ios::sync_with_stdio(false);
+    std::ios_base::sync_with_stdio(false);
     int t;
     cin>>t;
     for(int j=0;j<t;j++){

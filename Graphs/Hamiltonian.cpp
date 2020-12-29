@@ -16,21 +16,34 @@ class Graph{
             gmap[v].push_back(u);
         }
     }
-    void Hamiltonian(int src, int vtx, vector<bool>&visited, string str){
-        bool res=false;
-        for(int i=0;i<vtx;i++){
-            if(!visited[i]){
-                res=true;
-                break;
+
+    void Hamiltonian(int src, int vtx, unordered_map<int, bool>&visited, string str, vector<string>&path, int original){
+        if(visited.size()==1){
+            str=str+ to_string(src);
+            bool res=false;
+            for(int i: gmap[src]){
+                if(i==original){
+                    str=str+"*";
+                    res=true;
+                    break;
+                }
             }
-        }
-        if(!res){
-            
+            if(!res){
+                str=str+".";
+            }
+            path.push_back(str);
             return;
         }
-
+        // cout<<src<<"    "<<str<<"    "<<visited.size()<<endl;
+        str=str+to_string(src);
+        visited.erase(src);
+        for(int nbr: gmap[src]){
+            if(visited.count(nbr)>0){
+                Hamiltonian(nbr, vtx, visited, str, path, original);
+            }
+        }
+        visited[src]=true;
     }
-
 };
 
 int main(){
@@ -44,6 +57,13 @@ int main(){
     }
     int src;
     cin>>src;
-    vector<bool>visited(vtx, false);
-    g.Hamiltonian(src, vtx, visited);
+    unordered_map<int, bool>visited;
+    for(int i=0;i<vtx;i++){
+        visited[i]=true;
+    }
+    vector<string>path;
+    g.Hamiltonian(src, vtx, visited, "", path, src);
+    for(int i=0;i<path.size();i++){
+        cout<<path[i]<<endl;
+    }
 }
