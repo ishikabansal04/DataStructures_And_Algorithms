@@ -10,11 +10,11 @@ using namespace std;
 #define vvb vector<vb>
 
 
-void Knights(int sr, int sc, vvi &chess,  unordered_map<int, bool>&vis, int count, vvi dir){
-    // if(sr<0 || sc<0 || sr==chess.size() || sc==chess[0].size()){
-    //     return;
-    // }
-    if(vis.size()==1){
+void Knights(int sr, int sc, vvi &chess, int count, vvi dir, int n){
+    if(sr<0 || sc<0 || sr>=chess.size() || sc>=chess[0].size() || chess[sr][sc]>0){
+        return;
+    }
+    else if(count==n){
         chess[sr][sc]=count;
         for(int i=0;i<chess.size();i++){
             for(int j=0;j<chess[0].size();j++){
@@ -24,34 +24,37 @@ void Knights(int sr, int sc, vvi &chess,  unordered_map<int, bool>&vis, int coun
             cout<<endl;
         }
         cout<<endl;
+        chess[sr][sc]=0;
         return;
     }
     // cout<<"Hello"<<endl;
     chess[sr][sc]=count;
-    int index= sr*chess.size() + sc;
+    // int index= sr*chess.size() + sc;
     
-    vis.erase(index);
+   
     for(int i=0;i<dir.size();i++){
         int x=sr+dir[i][0];
         int y=sc+dir[i][1];
-        int tmpidx= x*chess.size() + y;
-        if(x>=0 && y>=0 && x<chess.size() && y<chess[0].size() && vis.count(tmpidx)>0){
+        // int tmpidx= x*chess.size() + y;
+        // if(x>=0 && y>=0 && x<chess.size() && y<chess[0].size() && vis.count(tmpidx)>0){
             // cout<<index<<"         "<<chess[sr][sc]<<"      "<<x<<"        "<<y<<endl;
-            Knights(x, y, chess, vis, count+1, dir);
-        }
+            Knights(x, y, chess, count+1, dir, n);
+        // }
     }
-    vis[index]=true;
+    chess[sr][sc]=0;
 }
 
 int main(){
+    std::ios::sync_with_stdio(false);
+    cin.tie(NULL);
     int n, row, col;
     cin>>n>>row>>col;
-    unordered_map<int, bool>visited;
-    for(int i=0;i<n*n;i++){
-        visited[i]=true;
-    }
+    // unordered_map<int, bool>visited;
+    // for(int i=0;i<n*n;i++){
+    //     visited[i]=true;
+    // }
     vvi chess(n, vi(n, 0));
     vvi dir={{-2,1}, {-1,2}, {1,2}, {2, 1}, {2,-1}, {1,-2}, {-1,-2}, {-2,-1}};
-    Knights(row, col, chess, visited, 1, dir);
+    Knights(row, col, chess, 1, dir, n*n);
     return 0;
 }
