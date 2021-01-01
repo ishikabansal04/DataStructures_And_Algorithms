@@ -47,7 +47,7 @@ void Knights(int sr, int sc, vvi &chess, int count, vvi dir, int n){
 int main(){
     std::ios::sync_with_stdio(false);
     cin.tie(NULL);
-    int n, row, col;
+    int n, row, col;           
     cin>>n>>row>>col;
     // unordered_map<int, bool>visited;
     // for(int i=0;i<n*n;i++){
