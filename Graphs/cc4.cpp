@@ -13,19 +13,42 @@ int main(){
         for(int i=0;i<m;i++){
             cin>>arr[i];
         }
-        int sum2=2*k;   
+        int sum1=0;
+        int sum2=0;   
         sort(arr.begin(), arr.begin()+m);
-        for(int i=m-1;i>=0;i--){
-            sum2=sum2-arr[i];
-            count++;
-            if(sum2<0){
-                break;
+        int idx=m-1;
+        while(idx>=0 && sum1<k && sum2<k){
+            if(count%2==0){
+                sum1=sum1+arr[idx];
+                idx--;
             }
+            else{
+                sum2=sum2+arr[idx];
+                idx--;
+            }
+            count++;
+            // cout<<sum1<<"       "<<sum2<<endl;
         }
-        if(sum2>0){
-            count=-1;
+        while(idx>=0 && sum1<k){
+            sum1=sum1+arr[idx];
+                idx--;
+                count++;
+                // cout<<sum1<<"       "<<sum2<<endl;
         }
-        cout<<count<<endl;
+        while(idx>=0 && sum2<k){
+            sum2=sum2+arr[idx];
+                idx--;
+                count++;
+                // cout<<sum1<<"       "<<sum2<<endl;
+        }
+        if(sum1<k || sum2<k){
+            cout<<-1<<endl;
+        }
+        else{
+            cout<<count<<endl;
+        }
+
+
     }
     return 0;
 }
