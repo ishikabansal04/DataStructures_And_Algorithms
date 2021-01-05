@@ -1,97 +1,79 @@
 #include<iostream>
-#include<map>
-#include<list>
-#include<string>
 #include<vector>
+#include<utility>
 #include<unordered_map>
 #include<queue>
 using namespace std;
 
-template<typename T>
 class Graph{
-    map<T, list<T>> gmap;
     public:
-    
-    void addEdge(T u, T v, bool bidir=true){
+    unordered_map<int,vector<int>>gmap;
+    void addEdge(int u, int v, bool bidir=true){
         gmap[u].push_back(v);
         if(bidir){
             gmap[v].push_back(u);
         }
     }
 
-    void display(){
-        for(auto vtx: gmap){
-            cout<<vtx.first<<"=> ";
-            for(auto i: vtx.second){
-                cout<<i<<", ";
-            }
-            cout<<endl;
-        }
-    }
-
-
-    bool cycle(T st, unordered_map<T,bool>& vis,unordered_map<T, int>& nnodes){
-    
-        queue<T>que;
-        bool cycle=true;
-        
-        que.push(st);
-        nnodes[st]=1;
-        vis[st]=true;
+    bool bipartiteHelper(queue<int>&que, unordered_map<int, int>&visited){
+        bool res=true;
+        bool idx=0;
+        int size=que.size();
         while(que.size()!=0){
-            T rn=que.front();
+            int rn=que.front();
             que.pop();
-            // cout<<rn<<", ";
-            for(auto i: gmap[rn]){
-                if(vis.count(i)>0){
-                    if(nnodes[rn]-nnodes[i]%2==0){
-                        cycle=true;
-                        continue;
-                    }
-                    else{
-                        cycle=false;
+            // cout<<idx<<endl;
+            for(int i:gmap[rn]){
+                if(visited.count(i)>0){
+                    if(visited[i]!=(!idx)){
+                        // cout<<i<<"ME"<<endl;
+                        res=false;
                         break;
                     }
-                    
                 }
                 else{
-                    vis[i]=true;
-                    nnodes[i]=nnodes[src]+1;
+                    visited[i]=!idx;
                     que.push(i);
                 }
             }
+            size--;
+            if(size==0){
+                idx=!idx;
+                size=que.size();
+            }
         }
-        // cout<<endl;
-        return cycle;
+        return res;
+    }
+    void Bipartite(int vtx, int edges){
+        queue<int>que;
+        bool res=true;
+        unordered_map<int, int>visited;
+        for(auto i:gmap){
+            if(visited.count(i.first)>0){
+                continue;
+            }
+            else{
+                que.push(i.first);
+                visited[i.first]=0;
+                res=bipartiteHelper(que, visited);
+                if(!res){
+                    break;
+                }
+            }
+        }
+        cout<<boolalpha<<res<<endl;
     }
 };
 
+
 int main(){
-    int vtx;
-    cin>>vtx;
-    int edge;
-    cin>>edge;
-    Graph<int> g;
-    for(int i=0;i<edge;i++){
-        int a,b,c;
-        cin>>a>>b>>c;
-        g.addEdge(a,b,false);
+    Graph g;
+    int vtx, edges;
+    cin>>vtx>>edges;
+    for(int i=0;i<edges;i++){
+        int u,v,w;
+        cin>>u>>v>>w;
+        g.addEdge(u,v,w);
     }
-    bool res=false;
-    unordered_map<int,bool>vis;
-    unordered_map<int, int>nnodes;
-    for(int i=0;i<vtx;i++){
-        
-        if(vis.count(i)>0){
-            continue;
-        }
-        else{
-            res = g.cycle(i, vis, nnodes);
-            if(res){
-                break;
-            }
-        }
-    }
-    
-    cout<<boolalpha<<res;
+    g.Bipartite(vtx, edges);
 }
