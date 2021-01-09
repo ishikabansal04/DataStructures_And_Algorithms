@@ -20,7 +20,7 @@ vector<string> GrayCode(int n){
         a=to_string(0) +a;
         finalres.push_back(a);
     }
-    for(int i=0;i<smallres.size();i++){
+    for(int i=smallres.size()-1;i>=0;i--){
         string a=smallres[i];
         a=to_string(1) +a;
         finalres.push_back(a);
