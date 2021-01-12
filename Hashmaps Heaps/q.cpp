@@ -4,9 +4,9 @@
 #include<vector>
 #include<climits>
 #include<algorithm>
-#include<string>
 #include<stack>
 #include<queue>
+#include<string>
 #include<utility>
 using namespace std;
 
@@ -20,41 +20,53 @@ typedef vector<bool> vb;
 typedef long long ll;
 
 int main(){
-    std::ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-
-    vector<list<pi> *> v;
-    int k, n, element;
+    unordered_map<int, int> my_map;
+    int n, element, k;
+    cin >> n;
+    vi v(n);
+    // if(n % 2 != 0){
+    //     cout << "false" << '\n';
+    // }
+    for(int i = 0; i < n; i++){
+        cin >> v[i];
+    }
     cin >> k;
-    for(int i = 0; i < k; i++){
-        cin >> n;
-        list<pi> *my_list = new list<pi>();
-        for(int j = 0; j < n; j++){
-            cin >> element;
-            my_list-> push_back(mp(element, i));
+    for(int i = 0; i < n; i++){
+        element = v[i] % k;
+        if(my_map.count(element) > 0){
+            my_map[element]++;
         }
-        v.push_back(my_list);
+        else{
+            my_map[element] = 1;
+        }
     }
-    priority_queue<pi, vector<pi>, greater<pi> >pq; 
-    int l = 0;
-    while(pq.size() != k){
-        pq.push(v[l]-> front());
-        l++;
-    }
-
-    while(!pq.empty()){
-        pi top = pq.top();
-        pq.pop();
-       
-        cout << top.first << " ";
+    
+    bool not_paired = false;
+    for(auto element : my_map){
+        cout<<element.first<<"  "<<my_map[element.first]<<endl;
+        if(my_map.count(k - element.first) > 0){ 
+            my_map[k - element.first]--;
+            my_map[element.first]--;
+            if(my_map[k - element.first] == 0){
+                my_map.erase(k - element.first);
+            }
+            for(auto element:my_map){
+                cout<<element.first<<"  "<<my_map[element.first]<<endl;
+            }
+            if(my_map[element.first] == 0){
+                my_map.erase(element.first);
+            } 
+        }
+        else{
+            not_paired = true;
+            break;
+        }
         
-        v[top.second]-> pop_front();
-        if (v[top.second]->size() == 0)
-        {
-           continue;
-        }
-
-        pq.push(v[top.second]-> front());
+    }
+    if(not_paired){
+        cout << "false" << '\n';
+    }
+    else{
+        cout << "true" << '\n';
     }
 }
