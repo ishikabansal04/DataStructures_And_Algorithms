@@ -1,72 +1,60 @@
 #include<iostream>
-#include<unordered_map>
-#include<list>
 #include<vector>
-#include<climits>
-#include<algorithm>
-#include<stack>
 #include<queue>
-#include<string>
-#include<utility>
+#include<unordered_map>
 using namespace std;
 
-#define mp make_pair
-#define INFI 10e8
-#define INF 10e7
-
-typedef pair<int, int> pi;
-typedef vector<int> vi;
-typedef vector<bool> vb;
-typedef long long ll;
-
 int main(){
-    unordered_map<int, int> my_map;
-    int n, element, k;
-    cin >> n;
-    vi v(n);
-    // if(n % 2 != 0){
-    //     cout << "false" << '\n';
+    int n;
+    cin>>n;
+    vector<int>arr(n);
+    unordered_map<int, int>frequency;
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    int k;
+    cin>>k;
+    for(int i=0;i<n;i++){
+        frequency[arr[i]%k]+=1;
+    }
+
+    // for(auto pair:frequency){
+    //     cout<<pair.first<<" "<<pair.second<<endl;
     // }
-    for(int i = 0; i < n; i++){
-        cin >> v[i];
-    }
-    cin >> k;
-    for(int i = 0; i < n; i++){
-        element = v[i] % k;
-        if(my_map.count(element) > 0){
-            my_map[element]++;
-        }
-        else{
-            my_map[element] = 1;
-        }
-    }
-    
-    bool not_paired = false;
-    for(auto element : my_map){
-        cout<<element.first<<"  "<<my_map[element.first]<<endl;
-        if(my_map.count(k - element.first) > 0){ 
-            my_map[k - element.first]--;
-            my_map[element.first]--;
-            if(my_map[k - element.first] == 0){
-                my_map.erase(k - element.first);
+
+    bool res=true;
+    for(auto pair: frequency){
+        int r1=pair.first;
+        // cout<<r1<<endl;
+        if(r1==0){
+            if(frequency[r1]%2==0){
+                frequency[r1]-=2;
+                if(frequency[r1]==0){
+                    frequency.erase(r1);
+                }
+                continue;
             }
-            for(auto element:my_map){
-                cout<<element.first<<"  "<<my_map[element.first]<<endl;
+            else{
+                res=false;
+                break;
             }
-            if(my_map[element.first] == 0){
-                my_map.erase(element.first);
-            } 
         }
-        else{
-            not_paired = true;
+        frequency[r1]-=1;
+        
+        if(frequency[r1]==0){
+            frequency.erase(r1);
+        }
+        int r2=k-r1;
+        if(frequency.count(r2)>0){
+            frequency[r2]-=1;
+            if(frequency[r2]==0){
+                frequency.erase(r2);
+            }            
+        }
+        else{  
+            res=false;
             break;
         }
-        
     }
-    if(not_paired){
-        cout << "false" << '\n';
-    }
-    else{
-        cout << "true" << '\n';
-    }
+    cout<<boolalpha<<res<<endl;
 }
