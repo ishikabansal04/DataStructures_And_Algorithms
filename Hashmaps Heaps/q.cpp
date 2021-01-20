@@ -1,60 +1,64 @@
 #include<iostream>
-#include<vector>
-#include<queue>
 #include<unordered_map>
+#include<list>
+#include<vector>
+#include<climits>
+#include<algorithm>
+#include<stack>
+#include<queue>
+#include<utility>
+#include<string>
 using namespace std;
 
+#define mp make_pair
+#define INFI 10e8
+#define INF 10e7
+
+typedef pair<int, int> pi;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef long long ll;
+
 int main(){
-    int n;
-    cin>>n;
-    vector<int>arr(n);
-    unordered_map<int, int>frequency;
-    for(int i=0;i<n;i++){
-        cin>>arr[i];
+    string s1, s2;
+    cin >> s1 >> s2;
+    int match_size = s2.size(), match_count = 0;
+    unordered_map<char, int> s2_map, s1_map;
+    for(int i = 0; i < s2.size(); i++){
+        s2_map[s2[i]] += 1;
     }
-    int k;
-    cin>>k;
-    for(int i=0;i<n;i++){
-        frequency[arr[i]%k]+=1;
-    }
-
-    // for(auto pair:frequency){
-    //     cout<<pair.first<<" "<<pair.second<<endl;
-    // }
-
-    bool res=true;
-    for(auto pair: frequency){
-        int r1=pair.first;
-        // cout<<r1<<endl;
-        if(r1==0){
-            if(frequency[r1]%2==0){
-                frequency[r1]-=2;
-                if(frequency[r1]==0){
-                    frequency.erase(r1);
+    string temp = "";
+    int j = 0;
+    for(int i = 0; i < s1.size(); ){
+        if (match_count != s2.size() && i < s1.size()){
+            if(s1_map[s1[i]] < s2_map[s1[i]]){
+                match_count++;
+            }
+            s1_map[s1[i]] += 1;
+            temp += s1[i];
+            //cout << temp << '\n';
+            i++;
+        }
+        else{
+            for(;j < i;){
+                if(s1_map[s1[j]] > s2_map[s1[j]] || s2_map.count(s1[j]) == 0){
+                    s1_map[s1[j]]--;
+                    cout << temp << " "<< j<<endl;
+                    temp= temp.substr(1);
+                    cout << temp <<" "<<j << '\n' << '\n';
+                    j++;
                 }
-                continue;
+                else if(s1_map[s1[j]] <= s2_map[s1[j]]){
+                    //temp = temp.substr(j + 1, i - j);
+                    match_count--;
+                    break;
+                }
+                //cout << temp << '\n';
             }
-            else{
-                res=false;
-                break;
-            }
-        }
-        frequency[r1]-=1;
-        
-        if(frequency[r1]==0){
-            frequency.erase(r1);
-        }
-        int r2=k-r1;
-        if(frequency.count(r2)>0){
-            frequency[r2]-=1;
-            if(frequency[r2]==0){
-                frequency.erase(r2);
-            }            
-        }
-        else{  
-            res=false;
-            break;
         }
     }
-    cout<<boolalpha<<res<<endl;
+    // if(match_count != s2.size()){
+    //     temp += s1[j];
+    // }
+    cout << temp << '\n';
 }
