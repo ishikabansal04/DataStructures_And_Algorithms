@@ -3,11 +3,11 @@
 #include<list>
 #include<vector>
 #include<climits>
-#include<algorithm>
+#include<string>
 #include<stack>
 #include<queue>
+#include<algorithm>
 #include<utility>
-#include<string>
 using namespace std;
 
 #define mp make_pair
@@ -20,45 +20,41 @@ typedef vector<bool> vb;
 typedef long long ll;
 
 int main(){
-    string s1, s2;
+    std::ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    string s1, s2, temp = "", min_string = "";
+    unordered_map<char, int> s1_map, s2_map;
+    int match_count = 0, j = 0;
     cin >> s1 >> s2;
-    int match_size = s2.size(), match_count = 0;
-    unordered_map<char, int> s2_map, s1_map;
     for(int i = 0; i < s2.size(); i++){
         s2_map[s2[i]] += 1;
     }
-    string temp = "";
-    int j = 0;
-    for(int i = 0; i < s1.size(); ){
-        if (match_count != s2.size() && i < s1.size()){
+    for(int i = 0; i < s1.size(); i++){
+        if(match_count != s2.size()){
             if(s1_map[s1[i]] < s2_map[s1[i]]){
                 match_count++;
             }
-            s1_map[s1[i]] += 1;
             temp += s1[i];
-            //cout << temp << '\n';
-            i++;
+            s1_map[s1[i]] += 1;
         }
-        else{
-            for(;j < i;){
-                if(s1_map[s1[j]] > s2_map[s1[j]] || s2_map.count(s1[j]) == 0){
+        if(match_count == s2.size()){
+            while(j < i){
+                if(s1_map[s1[j]] > s2_map[s1[j]]){
                     s1_map[s1[j]]--;
-                    cout << temp << " "<< j<<endl;
-                    temp= temp.substr(1);
-                    cout << temp <<" "<<j << '\n' << '\n';
+                    temp = temp.substr(1 , i - j);
+                    min_string = temp;
                     j++;
                 }
-                else if(s1_map[s1[j]] <= s2_map[s1[j]]){
-                    //temp = temp.substr(j + 1, i - j);
+                else{
+                    // temp = temp.substr(1, i - j);
+                    s1_map[s1[j]]--;
                     match_count--;
+                    j++;
                     break;
-                }
-                //cout << temp << '\n';
+                }          
             }
         }
     }
-    // if(match_count != s2.size()){
-    //     temp += s1[j];
-    // }
-    cout << temp << '\n';
+    cout << min_string << '\n';
 }

@@ -3,27 +3,32 @@
 #include<vector>
 #include<queue>
 #include<climits>
+#include<unordered_map>
 using namespace std;
 
 long long findMin(priority_queue<pair<long long, long long>, vector<pair<long long, long long>>, greater<pair<long long, long long>>>&pq, priority_queue<pair<long long, long long>, vector<pair<long long, long long>>, greater<pair<long long, long long>>>&temp){
     long long currtym=temp.top().first;
-    long long sum=0;
+    unordered_map<long long, long long>savetime;
     long long n=temp.size();
     while(temp.size()!=0 || pq.size()!=0){
-        cout<<currtym<<endl;
+        // cout<<currtym<<endl;
         while(temp.size() && temp.top().first<=currtym){
-            pq.push(make_pair(temp.top().second, temp.top().first));
+            pq.push(make_pair(temp.top().second, temp.top().first));  
             temp.pop();
         }
         // long top=pq.top();
-        cout<<pq.top().first<<" "<<pq.top().second<<endl;
-
-        long long currsum=sum + pq.top().first - pq.top().second;
-        sum= sum + currsum;
-        cout<<currsum<<"    "<<sum<<endl;
-        currtym+=sum;
+        // cout<<pq.top().first<<" "<<pq.top().second<<endl;
+        currtym += pq.top().first;
+        savetime[currtym]= pq.top().second;
         pq.pop();
     }
+
+    long long sum=0;
+
+    for(auto pair: savetime){
+        // cout<<pair.first<<"     "<<pair.second<<endl;
+        sum=sum+ pair.first- pair.second;
+    }    
     return sum/n;
 }
 
