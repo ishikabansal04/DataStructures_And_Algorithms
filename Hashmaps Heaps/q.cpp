@@ -20,9 +20,6 @@ typedef vector<bool> vb;
 typedef long long ll;
 
 int main(){
-    std::ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-
     string s1, s2, temp = "", min_string = "";
     unordered_map<char, int> s1_map, s2_map;
     int match_count = 0, j = 0;
