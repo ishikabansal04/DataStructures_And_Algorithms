@@ -14,10 +14,12 @@ int main(){
     }
     int k;
     cin>>k;
-    int maxlen=0;
+    int count=0;
     int currlen=0;
     int sum=0;
+
     unordered_map<int, int>mymap;
+    mymap[0] =1;
     for(int i=0;i<n;i++){
         sum=sum+arr[i];
         int temp=sum%k;
@@ -25,17 +27,9 @@ int main(){
             temp =temp+k;
         }
         if(mymap.count(temp)>0){
-            currlen=i-mymap[temp];
-            maxlen= max(currlen, maxlen);
+            count+=mymap[temp];
         }
-        else if(temp==0){
-            currlen= i+1;
-            maxlen= max(currlen, maxlen);
-        }
-        else{
-            mymap[temp]=i;
-        }
-    } 
-    cout<<maxlen<<endl;
-    return 0;
+        mymap[temp]+=1;
+    }
+    cout<<count<<endl;
 }
