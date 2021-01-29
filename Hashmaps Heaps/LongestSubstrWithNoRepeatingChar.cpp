@@ -31,7 +31,6 @@ int main(){
                 if(visited[str[j]]>mymap[str[j]]){
                     visited[str[j]]-=1;
                 }
-                
             }
         }
     }
