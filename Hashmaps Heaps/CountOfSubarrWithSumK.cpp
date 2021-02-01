@@ -16,25 +16,14 @@ int main(){
         sum=sum+val;
         arr[i]=sum;
     }
+
     int k;
     cin>>k;
     int count=0;
+    mymap[0]=1;
     for(int i=0;i<n;i++){
-        if(mymap.count(arr[i])>0 && arr[i]!=k){
-            mymap[arr[i]]+=1;
-            continue;
-        }
-        else if(mymap.count(k-arr[i])>0){
-            count+=mymap[k-arr[i]];
-            mymap[k-arr[i]]+=1;
-        }
-        else if(mymap.count(arr[i]-k)>0){
+        if(mymap.count(arr[i]-k)>0){
             count+=mymap[arr[i]-k];
-            mymap[arr[i]-k]+=1;
-        }
-        else if(arr[i]==k){
-            count+=1;
-            // mymap[arr[i]]+=1;
         }
         mymap[arr[i]]+=1;
     }

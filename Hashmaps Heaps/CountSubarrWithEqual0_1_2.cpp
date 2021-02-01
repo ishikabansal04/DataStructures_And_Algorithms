@@ -23,6 +23,8 @@ int main(){
     int sum=0;
     int zeroes=0, ones=0, twos=0;
     int count=0;
+    pair<int, int>zeropair(0, 0);
+    mymap[zeropair]=1;
     for(int i=0;i<n;i++){
         cin>>arr[i];
         if(arr[i]==0){
@@ -35,8 +37,7 @@ int main(){
             twos+=1;
         }
         pair<int, int>newpair(ones-zeroes, twos-ones);
-        pair<int, int>zeropair(0, 0);
-        mymap[zeropair]=1;
+      
         if(mymap.count(newpair)>0){
             count = count+ mymap[newpair];
         }
