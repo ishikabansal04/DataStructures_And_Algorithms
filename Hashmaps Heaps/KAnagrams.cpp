@@ -21,19 +21,11 @@ int main(){
             src[str1[i]]+=1;
             dest[str2[i]]+=1;
         }
-        cout<<"Map1"<<endl;
-        for(auto s:src){
-           cout<<s.first<<" "<<s.second<<endl;
-        }
-        cout<<"Map2"<<endl;
-        for(auto s:dest){
-           cout<<s.first<<" "<<s.second<<endl;
-        }
         int freqdiff=0;
         for(auto s:src){
             if(dest[s.first]!=s.second){
+                if(dest[s.first] > src[s.first])
                 freqdiff+=dest[s.first]- src[s.first];
-                cout<<s.first<<"    "<<dest[s.first]- src[s.first]<<endl;
             }
             // vis[s.first]=true;
         }

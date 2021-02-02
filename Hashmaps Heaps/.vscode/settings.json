@@ -5,6 +5,7 @@
         "unordered_map": "cpp",
         "ostream": "cpp",
         "utility": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "algorithm": "cpp"
     }
 }
