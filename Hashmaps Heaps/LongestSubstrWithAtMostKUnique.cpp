@@ -16,8 +16,10 @@ int main(){
     for(int i=0;i<str.length();i++){
         if(!visited[str[i]]){
             visited[str[i]]=true;
-            uniquechar[i]= visited.size();
+            
         }
+        mymap[visited.size()]=i;
+        uniquechar[i]= visited.size();
     }
     int currlen=0;
     int maxlen=0;
@@ -25,14 +27,22 @@ int main(){
     int tunique=0;
     for(;i<str.length();i++){
         if(tunique<=k){
-            tunique = uniquechar[i];
+            if(j==0)
+                tunique = uniquechar[i];
+            else{
+                tunique = uniquechar[i] - uniquechar[j];
+            }
         }
         if(tunique>k){
             for(;j<=i && tunique>k;j++){
                 int currlen=i-j;
                 maxlen =  max(currlen, maxlen);
+                if(j< mymap[uniquechar[j]]){
+                    continue;
+                }
                 tunique = tunique- uniquechar[j];
             }
         }
     }
+    cout<<maxlen<<endl;
 }

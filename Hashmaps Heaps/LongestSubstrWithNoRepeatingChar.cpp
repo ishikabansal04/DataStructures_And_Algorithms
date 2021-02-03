@@ -8,30 +8,41 @@ int main(){
     string str;
     cin>>str;
     unordered_map<char, int>mymap;
-    for(int i=0;i<str.length();i++){
-        if(mymap.count(str[i])>0){
-            continue;
-        }
-        else{
-            mymap[str[i]]=1;
-        }
-    }
-    unordered_map<char, int>visited;
-    int i=0, j=0, match_count=0, currlen=0, maxlen=0;
-    string res="";
+    int i=0, j=0, currlen=0, maxlen=0;
+    char Repeatingchar ='\0';
+    string res="", temp="";
     for(;i<str.length();i++){
-        if(match_count != mymap.size()){
-            if(visited[str[i]]<mymap[str[i]]){
-                match_count+=1;
+        if(Repeatingchar=='\0'){
+            mymap[str[i]]+=1;
+            if(mymap[str[i]]>1){
+                Repeatingchar = str[i];
             }
-            visited[str[i]]+=1;
+            currlen=i-j;
+            if(currlen> maxlen){
+                maxlen= currlen;
+                res= str.substr(j, i-j);
+            }
         }
-        if(match_count == mymap.size()){
-            for(;j<i;j++){
-                if(visited[str[j]]>mymap[str[j]]){
-                    visited[str[j]]-=1;
+        if(Repeatingchar != '\0'){
+            for(;j<=i && Repeatingchar!='\0'; j++){
+                currlen=i-j;
+                if(currlen> maxlen){
+                    maxlen= currlen;
+                    res= str.substr(j, i-j);
+                }
+                mymap[str[j]]-=1;
+                if(str[j] == Repeatingchar && mymap[str[j]]<=1){
+                    Repeatingchar ='\0';
                 }
             }
-        }
+        }   
     }
+    if(Repeatingchar == '\0'){
+            currlen=i-j;
+            if(currlen> maxlen){
+                maxlen= currlen;
+                res= str.substr(j, i-j);
+            }
+        }
+    cout<<maxlen<<endl;
 }
