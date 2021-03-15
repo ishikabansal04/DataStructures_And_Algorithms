@@ -1,44 +1,63 @@
-#include<iostream>
-#include<unordered_map>
-#include<list>
-#include<vector>
-#include<stack>
-#include<queue>
-#include<string>
-#include<algorithm>
-#include<climits>
-#include<utility>
-using namespace std;
 
-#define mp make_pair
-#define INFI 10e8
-#define INF 10e7
+/* Algorithm => 
+    In this algorithm we use dynamic programming approach .Here we make 2d dp array and on each step we see how many 
+    max gold can we earn by reaching that cell.
+    For this algorithm we move column wise as our src as well as destination lies in first and last column respectively.
+    There are 3 possible paths for each cell. One to top right , second to right , third to bottom right.
+    Taking max out of all possible paths , we can earn maximum profit. 
+*/
 
-typedef pair<int, int> pi;
-typedef vector<int> vi;
-typedef vector<bool> vb;
-typedef long long ll;
+class Solution{
+public:
+    int maxGold(int r, int c, vector<vector<int>> mine)
+    {
+        // code here
+        vector<vector<int>>dp(r, vector<int>(c));
+        
+        for(int i = 0; i < r; i++){
+            for(int j = 0; j < c; j++){
+                if(j == 0){
+                    dp[i][j] = mine[i][j]; // * To fill the left wall
+                }
+            }
+        }
+    
 
-int climb_stairs(int n, vi &v, vi &dp){
-    for(int i = n - 1; i >= 0; i--){
-        for(int j = 1; j <= v[i]; j++){
-            if(i + j <= n){
-                dp[i] = min(1 + dp[i + j], dp[i]);
+    // for loops ...outer one for columns and inner one for rows
+    for(int j = 1; j < c; j++){
+        for(int i = 0; i < r; i++){
+            if(r == 1){
+
+                //only if 1 row
+                dp[i][j] = mine[i][j] + dp[i][j-1];
+            }
+            else if(i == 0){ 
+
+                //if it is the first row
+                dp[i][j] = mine[i][j] + max(dp[i][j - 1], dp[i + 1][j - 1]);
+            }
+            else if(i == r - 1){
+
+                //if it is last row 
+                dp[i][j] = mine[i][j] + max(dp[i][j - 1], dp[i - 1][j - 1]);
+            }
+            else{
+
+                //if it is intermediate row
+                dp[i][j] = mine[i][j] + max(dp[i][j - 1], max(dp[i - 1][j - 1], dp[i + 1][j - 1]));
             }
         }
     }
-    return dp[0];
-}
 
-int main(){
-    int n;
-    cin >> n;
-    vi v(n);
-    vi dp(n + 1, INT_MAX);
-    for(int i = 0; i < n; i++){
-        cin >> v[i];
+    //returning maximum gold 
+    int max_gold = INT_MIN;
+    for(int i = 0; i < r; i++){
+        max_gold = max(dp[i][c - 1], max_gold);
     }
-    dp[n] = 0;
-    int min_moves = climb_stairs(n, v, dp);
-    cout << min_moves << '\n';
-}
+    return max_gold;
+    }
+};
+
+
+
+

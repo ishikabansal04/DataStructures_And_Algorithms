@@ -26,7 +26,6 @@ int main(){
         }
         else{ 
             prof += arr[i]-stk.top();
-            // cout<<stk.top()<<"  "<<arr[i]<<"    "<<prof<<endl;
             stk.push(arr[i]);
         }
     }
