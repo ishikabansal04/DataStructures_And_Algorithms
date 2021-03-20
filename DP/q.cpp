@@ -1,63 +1,43 @@
+/* Problem Statement =>
+    Given a “2 x n” board and tiles of size “2 x 1”, count the number of ways to
+   tile the given board using the 2 x 1 tiles.
+    A tile can either be placed horizontally i.e., as a 1 x 2 tile or vertically
+   i.e., as 2 x 1 tile. */
 
-/* Algorithm => 
-    In this algorithm we use dynamic programming approach .Here we make 2d dp array and on each step we see how many 
-    max gold can we earn by reaching that cell.
-    For this algorithm we move column wise as our src as well as destination lies in first and last column respectively.
-    There are 3 possible paths for each cell. One to top right , second to right , third to bottom right.
-    Taking max out of all possible paths , we can earn maximum profit. 
-*/
+/* Algorithm =>
+    Approach used : Dynamic Programming
+    Test cases handled explicitly:
+    Case 1: if n == 1 , only 1 configuration of tile is possible
+    Case 2: if n == 2 , only 2 configurations are possible
+    Case 3: if n > 2, then we got 2 possible subcases:
+        Subcase 1: if we place length wise, call dp[i-2];
+        Subcase 2: if we place width wise, call dp[i-1];
+    at last return, dp[n] for number of ways. */
 
-class Solution{
-public:
-    int maxGold(int r, int c, vector<vector<int>> mine)
-    {
-        // code here
-        vector<vector<int>>dp(r, vector<int>(c));
-        
-        for(int i = 0; i < r; i++){
-            for(int j = 0; j < c; j++){
-                if(j == 0){
-                    dp[i][j] = mine[i][j]; // * To fill the left wall
+#include <iostream>
+#include <climits>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int maxEnvelopes(vector<vector<int>>& envelopes) {
+        sort(envelopes.begin(), envelopes.end());
+        vector<int>dp(envelopes.size(), 1);
+        int max_=1;
+        for(int i=1; i<envelopes.size(); i++){
+            for(int j=i-1; j>=0; j--){
+                if(envelopes[j][0] < envelopes[i][0] && envelopes[j][1]< envelopes[i][1]){
+                    dp[i]= max(dp[i], dp[j]+1);
                 }
             }
+            max_= max(max_, dp[i]);
         }
-    
-
-    // for loops ...outer one for columns and inner one for rows
-    for(int j = 1; j < c; j++){
-        for(int i = 0; i < r; i++){
-            if(r == 1){
-
-                //only if 1 row
-                dp[i][j] = mine[i][j] + dp[i][j-1];
-            }
-            else if(i == 0){ 
-
-                //if it is the first row
-                dp[i][j] = mine[i][j] + max(dp[i][j - 1], dp[i + 1][j - 1]);
-            }
-            else if(i == r - 1){
-
-                //if it is last row 
-                dp[i][j] = mine[i][j] + max(dp[i][j - 1], dp[i - 1][j - 1]);
-            }
-            else{
-
-                //if it is intermediate row
-                dp[i][j] = mine[i][j] + max(dp[i][j - 1], max(dp[i - 1][j - 1], dp[i + 1][j - 1]));
-            }
+        for(int i=0; i<envelopes.size(); i++){
+            cout<<dp[i]<<"  ";
         }
+        return max_;
     }
 
-    //returning maximum gold 
-    int max_gold = INT_MIN;
-    for(int i = 0; i < r; i++){
-        max_gold = max(dp[i][c - 1], max_gold);
+    int main(){
+        vector<vector<int>> envelopes={{5,4},{6,4},{6,7},{2,3}};
+        cout<<maxEnvelopes(envelopes);
     }
-    return max_gold;
-    }
-};
-
-
-
-
