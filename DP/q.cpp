@@ -1,44 +1,82 @@
-/* Problem Statement =>
-    Given a “2 x n” board and tiles of size “2 x 1”, count the number of ways to
-   tile the given board using the 2 x 1 tiles.
-    A tile can either be placed horizontally i.e., as a 1 x 2 tile or vertically
-   i.e., as 2 x 1 tile. */
-
 #include <iostream>
-#include <climits>
+#include <unordered_map>
+#include <list>
 #include <vector>
+#include <stack>
+#include <queue>
 #include <algorithm>
+#include <string>
+#include <climits>
+#include <utility>
 using namespace std;
 
-long long numberOfWays(long long length){
-    int mod = 1000000007;
-    vector<long long> dp(length + 1, 0);
-    // Case 1: if n == 1 , only 1 configuration of tile is possible
-    dp[1] = 1;
-    // Case 2: if n == 2 , only 2 configurations are possible
-    dp[2] = 2;
-    /* Case 3: if n > 2, then we got 2 possible subcases:
-        Subcase 1: if we place length wise, call dp[i-2];
-        Subcase 2: if we place width wise, call dp[i-1];  */
-    for (int i = 3; i <= length; i++){
-        dp[i] = ((dp[i - 2] % mod) + (dp[i - 1] % mod)) % mod;
+#define mp make_pair
+#define pb push_back
+#define INFI 10e8
+#define INF 10e7
+#define mod 1000000007
+#define sieve_limit 10e6
+
+typedef long long ll;
+typedef pair<int, int> pi;
+typedef vector<int> vi;
+typedef vector<long> vl;
+typedef vector<long long> vll;
+typedef vector<long long int> vlli;
+typedef vector<bool> vb;
+typedef vector<vector<int> > vvi;
+typedef vector<vector<long long> > vvll;
+typedef vector<vector<long long int> > vvlli;
+typedef vector<vector<bool> > vvb;
+
+vll* ngetr(vll &v){
+    int n = (int) v.size();
+    stack<ll> my_stack;
+    vll *right = new vll(n , 0);
+    for(int i = 1; i < n; i++){
+       while(!my_stack.empty() && v[my_stack.top()] <= v[i]){
+            ll top = my_stack.top();
+            my_stack.pop();
+            right-> at(top) = i;
+       }
+       my_stack.push(i);
     }
-    return dp[length];
+    return right;
+}
+
+vll* ngetl(vll &v){
+    int n = (int) v.size();
+    stack<ll> my_stack;
+    vll *left = new vll(n, 0);
+    for(int i = n - 1; i >= 1; i--){
+        while(!my_stack.empty() && v[my_stack.top()] <= v[i]){
+            ll top = my_stack.top();
+            my_stack.pop();
+            left-> at(top) = i;
+        }
+        my_stack.push(i);
+    } 
+    return left;
 }
 
 int main(){
-    long long length;
-    cout << "Enter the length of the floor: " << endl;
-    cin >> length;
-    cout << "Number of ways to tile floor of length 2 x " << length << " are: " << numberOfWays(length) << endl;
-}
+    std::ios_base::sync_with_stdio(false);
+    cin.tie();
 
-/*  Sample Input:
-        n=3
-    Sample Output:
-        3
-    Expected Time Complexity:
-        O(n)
-    Expected Space Complexity:
-        O(n)
-*/
+    int n;
+    ll _max = 0;
+    cin >> n;
+    vll v(n + 1);
+    for(int i = 1; i <= n; i++){
+        cin >> v[i];
+    }
+    vll *left = ngetl(v);
+    vll *right = ngetr(v);
+    
+    for(int i = 1; i <= n; i++){
+        ll idx_product = left-> at(i) * right-> at(i);
+        _max = max(_max, idx_product);
+        cout<< left->at(i) << "     " << right->at(i) <<"    "<< idx_product<<endl;
+    }
+    cout << _max << '\n';
+}
