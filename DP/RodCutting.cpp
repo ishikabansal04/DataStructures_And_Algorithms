@@ -19,7 +19,7 @@ int main(){
     for(int i=1; i<=n; i++){
         dp[i] = arr[i-1];
         for(int j=1; j<i; j++){
-            dp[i] = min(dp[i], dp[j] + dp[i-j]);
+            dp[i] = max(dp[i], dp[j] + dp[i-j]);
         }
     }
     cout<<dp[n]<<endl;
