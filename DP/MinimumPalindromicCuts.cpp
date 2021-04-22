@@ -29,32 +29,20 @@ int main(){
         }
     }
 
-    vector<vector<int>>dp(n, vector<int>(n, 0));
-    for(int gap = 0; gap<n; gap++){
-        for(int i=0, j=gap; j<n; i++, j++){
-            if(gap==0){
-                dp[i][j] = 0;
-            }
-            else if(gap == 1){
-                dp[i][j] = str[i] == str[j] ? 0 : 1;
+    vector<int>dp(n, INT_MAX);
+    dp[0]=0;
+    for(int j=1; j<n; j++){
+        for(int i=j; i>=0; i--){
+            if(isPalin[i][j]){
+                if(i-1>=0)
+                    dp[j] =  min(dp[j], dp[i-1]+1);
+                else
+                    dp[j] =  min(dp[i], 1);
             }
             else{
-                if(isPalin[i][j]){
-                    dp[i][j] = 0;
-                }
-                else{
-                    dp[i][j] = min(dp[i][j-2] + dp[i+1][j] , dp[i][j-1] + dp[i+2][j]);
-                }
+                continue;
             }
         }
     }
-
-
-    for(int i=0; i<n; i++){
-        for(int j=0; j<n; j++){
-            cout<< dp[i][j] << "    ";
-        }
-        cout<<endl;
-    }
-    cout << dp[0][n-1] << endl;
+    cout<<dp[n-1]<<endl;
 }
