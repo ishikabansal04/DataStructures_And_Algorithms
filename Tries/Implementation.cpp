@@ -55,6 +55,17 @@ class TrieNode{
             root->children[index]->isTerminal = false;
         } 
         helperRemove(word.substr(1), root->children[index]);
+        bool flag = false;
+
+        for(int i=0; i<26; i++){
+            if(root->children[index]->children[i]!=NULL){
+                flag = true;
+                break;
+            }
+        }
+        if(!flag && root->children[index]->isTerminal== false){
+            root->children[index] = NULL;
+        }
     }
 
     void helperDisplay(Node* root, string word){
