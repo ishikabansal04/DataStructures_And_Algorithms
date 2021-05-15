@@ -6,7 +6,7 @@ using namespace std;
 
 class Node{
     public:
-    int maximum = INT_MIN, s_maximum = INT_MIN;
+    int maximum, s_maximum;
 };
 
 // Building our segment tree!
@@ -22,19 +22,10 @@ void Buildtree(vector<int>&arr, vector<Node*>&tree, int start, int end, int tree
     Buildtree(arr, tree, start, mid, (2*treenode));
     Buildtree(arr, tree, mid+1, end, (2*treenode)+1);
 
-    int leftmax = tree[2*treenode]->maximum;
-    int leftsmax = tree[2*treenode]->s_maximum;
-    int rightmax = tree[2*treenode + 1]->maximum;
-    int rightsmax = tree[2*treenode + 1]->s_maximum;
-
-    if(rightmax > leftmax){
-        tree[treenode]->maximum = rightmax;
-        tree[treenode]->s_maximum = max(max(leftmax, leftsmax), rightsmax);
-    }
-    else{
-        tree[treenode]->maximum = leftmax;
-        tree[treenode]->s_maximum = max(max(rightmax, leftsmax), rightsmax);
-    }
+    Node* left = tree[2*treenode];
+    Node* right = tree[2*treenode +1];
+    tree[treenode]->maximum = max(left->maximum, right->maximum);
+    tree[treenode]->s_maximum = min(max(left->maximum, right->s_maximum), max(right->maximum, left->s_maximum));
     return;
 }
 
@@ -48,7 +39,7 @@ int main(){
     }
 
     // size of segment tree should always be 4*n approximately!
-    vector<Node*>tree(4*n);
+    vector<Node*>tree(3*n);
 
     // Building initial tree
     Buildtree(arr, tree, 0, n-1, 1);
@@ -77,7 +68,7 @@ int main(){
     //     else if(operation == 3){
 
             // Display current segment tree            
-                for(int i=1; i<(2*n); i++){
+                for(int i=1; i<(3*n); i++){
                     cout << tree[i]->maximum << "    ";
                 }
                 cout << endl; 
